@@ -138,14 +138,14 @@ export function LoginForm({
               <form.Subscribe
                 selector={(state) => [state.canSubmit, state.isSubmitting]}
                 children={([canSubmit, isSubmitting]) => (
-                  <Button type="submit" className="w-full mt-2" disabled={!canSubmit || isSubmitting}>
+                  <Button type="submit" className="w-full mt-2 bg-red-500 hover:bg-red-600 text-white" disabled={!canSubmit || isSubmitting}>
                     {isSubmitting ? "Logging in..." : "Login"}
                   </Button>
                 )}
               />
 
               <FieldDescription className="text-center mt-4">
-                Don&apos;t have an account? <Link href="/signup" className="underline underline-offset-4">Sign up</Link>
+                Don&apos;t have an account? <Link href="/signup" className="underline underline-offset-4 text-red-500 hover:text-red-600  font-bold">Sign up</Link>
               </FieldDescription>
             </FieldGroup>
           </form>

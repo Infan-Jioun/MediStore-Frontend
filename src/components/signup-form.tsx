@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react" 
+import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -132,14 +132,21 @@ export function SignupForm({
           <form.Subscribe
             selector={(state) => [state.canSubmit, state.isSubmitting]}
             children={([canSubmit, isSubmitting]) => (
-              <Button type="submit" disabled={!canSubmit || isSubmitting}>
+              <Button type="submit" className="bg-red-500 hover:bg-red-600 text-white" disabled={!canSubmit || isSubmitting}>
                 {isSubmitting ? "Creating Account..." : "Create Account"}
               </Button>
             )}
           />
         </Field>
 
-  
+        <FieldSeparator>Or continue with</FieldSeparator>
+
+        <Field>
+
+          <FieldDescription className="mt-4 text-center">
+            Already have an account? <Link href="/login" className="underline underline-offset-4  text-red-500 hover:text-red-600  font-bold ">Sign in</Link>
+          </FieldDescription>
+        </Field>
       </FieldGroup>
     </form>
   )
