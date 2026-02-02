@@ -50,7 +50,7 @@ const Navbar = ({ className }: { className?: string }) => {
       <div className="container max-w-7xl mx-auto px-4">
         <nav className="hidden lg:flex items-center justify-between">
           <div className="flex items-center gap-8">
-            <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
+            <Link href="/" className="flex items-center gap-2 font-bold text-xl text-red-500">
               <Pill className="size-6" />
               MediStore
             </Link>
@@ -150,7 +150,7 @@ const renderUserActions = (isLoggedIn: boolean, role: UserRole, onLogout: () => 
     return (
       <div className="flex gap-2">
         <Button variant="ghost" asChild><Link href="/login">Login</Link></Button>
-        <Button asChild><Link href="/register">Register</Link></Button>
+        <Button asChild><Link className="bg-red-500 hover:bg-rose-600" href="/signup">Register</Link></Button>
       </div>
     );
   }
