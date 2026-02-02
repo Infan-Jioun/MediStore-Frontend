@@ -98,8 +98,12 @@ const Navbar = ({ className }: { className?: string }) => {
                 </SheetHeader>
                 <div className="flex flex-col justify-between h-[90%] py-6">
                   <Accordion type="single" collapsible className="w-full">
-                    <MobileLink title="Home" url="/" />
-                    <MobileLink title="Shop" url="/shop" />
+                    <AccordionItem value="home" className="border-none">
+                      <MobileLink title="Home" url="/" />
+                    </AccordionItem>
+                    <AccordionItem value="shop" className="border-none">
+                      <MobileLink title="Shop" url="/shop" />
+                    </AccordionItem>
                     {!isPending && renderMobileRoleLinks(userRole)}
                   </Accordion>
 
@@ -123,21 +127,29 @@ const Navbar = ({ className }: { className?: string }) => {
 const renderRoleLinks = (role: UserRole) => {
   switch (role) {
     case "CUSTOMER":
-      return <NavLink title="My Orders" url="/orders" />;
+      return (
+        <>
+          <NavLink title="My Orders" url="/orders" />
+          <NavLink title="Prescriptions" url="/prescriptions" />
+        </>
+      );
     case "SELLER":
       return (
         <>
           <NavLink title="Dashboard" url="/seller/dashboard" />
           <NavLink title="Inventory" url="/seller/medicines" />
           <NavLink title="Orders" url="/seller/orders" />
+          <NavLink title="Analytics" url="/seller/analytics" />
         </>
       );
     case "ADMIN":
       return (
         <>
-          <NavLink title="Admin Home" url="/admin" />
+          <NavLink title="Dashboard" url="/admin/dashboard" />
           <NavLink title="Users" url="/admin/users" />
+          <NavLink title="Sellers" url="/admin/sellers" />
           <NavLink title="Categories" url="/admin/categories" />
+          <NavLink title="Orders" url="/admin/orders" />
         </>
       );
     default:
@@ -149,18 +161,30 @@ const renderUserActions = (isLoggedIn: boolean, role: UserRole, onLogout: () => 
   if (!isLoggedIn) {
     return (
       <div className="flex gap-2">
-        <Button variant="ghost" asChild><Link href="/login">Login</Link></Button>
-        <Button asChild><Link className="bg-red-500 hover:bg-rose-600" href="/signup">Register</Link></Button>
+        <Button variant="ghost" asChild>
+          <Link href="/login" className="flex items-center gap-2">
+            <LogIn className="size-4" /> Login
+          </Link>
+        </Button>
+        <Button asChild className="bg-red-500 hover:bg-rose-600">
+          <Link href="/signup">Register</Link>
+        </Button>
       </div>
     );
   }
   return (
     <div className="flex items-center gap-3">
       {role === "CUSTOMER" && (
-        <Button variant="outline" size="icon" asChild><Link href="/cart"><ShoppingCart className="size-5" /></Link></Button>
+        <Button variant="outline" size="icon" asChild>
+          <Link href="/cart">
+            <ShoppingCart className="size-5" />
+          </Link>
+        </Button>
       )}
       <Button variant="outline" size="icon" asChild>
-        <Link href="/profile"><User className="size-5" /></Link>
+        <Link href="/profile">
+          <User className="size-5" />
+        </Link>
       </Button>
       <Button variant="destructive" size="sm" className="gap-2" onClick={onLogout}>
         <LogOut className="size-4" /> Logout
@@ -173,16 +197,81 @@ const renderMobileRoleLinks = (role: UserRole) => {
   switch (role) {
     case "CUSTOMER":
       return (
-        <div className="mt-4 space-y-4 pt-4 border-t">
-          <MobileLink title="My Orders" url="/orders" />
-          <MobileLink title="Cart" url="/cart" />
-          <MobileLink title="Profile" url="/profile" />
-        </div>
+        <>
+          <AccordionItem value="customer-links" className="border-none">
+            <AccordionTrigger className="text-base font-semibold py-2 hover:no-underline">
+              Customer
+            </AccordionTrigger>
+            <AccordionContent className="space-y-1 pb-4">
+              <Link href="/orders" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
+                My Orders
+              </Link>
+              <Link href="/prescriptions" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
+                Prescriptions
+              </Link>
+              <Link href="/cart" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
+                Cart
+              </Link>
+              <Link href="/profile" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
+                Profile
+              </Link>
+            </AccordionContent>
+          </AccordionItem>
+        </>
       );
     case "SELLER":
-      return <MobileGroup title="Seller Panel" items={[{ title: "Dashboard", url: "/seller/dashboard" }, { title: "Inventory", url: "/seller/medicines" }, { title: "Orders", url: "/seller/orders" }]} />;
+      return (
+        <AccordionItem value="seller-links" className="border-none">
+          <AccordionTrigger className="text-base font-semibold py-2 hover:no-underline">
+            Seller Panel
+          </AccordionTrigger>
+          <AccordionContent className="space-y-1 pb-4">
+            <Link href="/seller/dashboard" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
+              Dashboard
+            </Link>
+            <Link href="/seller/medicines" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
+              Inventory
+            </Link>
+            <Link href="/seller/orders" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
+              Orders
+            </Link>
+            <Link href="/seller/analytics" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
+              Analytics
+            </Link>
+            <Link href="/profile" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
+              Profile
+            </Link>
+          </AccordionContent>
+        </AccordionItem>
+      );
     case "ADMIN":
-      return <MobileGroup title="Admin Dashboard" items={[{ title: "Stats", url: "/admin" }, { title: "Users", url: "/admin/users" }, { title: "Categories", url: "/admin/categories" }]} />;
+      return (
+        <AccordionItem value="admin-links" className="border-none">
+          <AccordionTrigger className="text-base font-semibold py-2 hover:no-underline">
+            Admin Panel
+          </AccordionTrigger>
+          <AccordionContent className="space-y-1 pb-4">
+            <Link href="/admin/dashboard" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
+              Dashboard
+            </Link>
+            <Link href="/admin/users" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
+              Users
+            </Link>
+            <Link href="/admin/sellers" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
+              Sellers
+            </Link>
+            <Link href="/admin/categories" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
+              Categories
+            </Link>
+            <Link href="/admin/orders" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
+              Orders
+            </Link>
+            <Link href="/profile" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
+              Profile
+            </Link>
+          </AccordionContent>
+        </AccordionItem>
+      );
     default:
       return null;
   }
@@ -192,12 +281,29 @@ const renderMobileUserActions = (isLoggedIn: boolean, onLogout: () => void) => {
   if (!isLoggedIn) {
     return (
       <div className="space-y-3">
-        <Button className="w-full" variant="outline" asChild><Link href="/login">Login</Link></Button>
-        <Button className="w-full" asChild><Link href="/signup">Register</Link></Button>
+        <Button className="w-full" variant="outline" asChild>
+          <Link href="/login" className="flex items-center justify-center gap-2">
+            <LogIn className="size-4" /> Login
+          </Link>
+        </Button>
+        <Button className="w-full" asChild>
+          <Link href="/signup">Register</Link>
+        </Button>
       </div>
     );
   }
-  return <Button className="w-full" variant="destructive" onClick={onLogout}>Logout</Button>;
+  return (
+    <div className="space-y-3">
+      <Button className="w-full" variant="outline" asChild>
+        <Link href="/profile" className="flex items-center justify-center gap-2">
+          <User className="size-4" /> Profile
+        </Link>
+      </Button>
+      <Button className="w-full flex items-center justify-center gap-2" variant="destructive" onClick={onLogout} >
+        <LogOut className="size-4" /> Logout
+      </Button>
+    </div>
+  );
 };
 
 export { Navbar };
@@ -216,17 +322,4 @@ const MobileLink = ({ title, url }: { title: string; url: string }) => (
   <Link href={url} className="block py-2 text-base font-medium hover:text-primary">
     {title}
   </Link>
-);
-
-const MobileGroup = ({ title, items }: { title: string; items: { title: string; url: string }[] }) => (
-  <AccordionItem value={title} className="border-none">
-    <AccordionTrigger className="text-base font-semibold py-2 hover:no-underline">{title}</AccordionTrigger>
-    <AccordionContent className="space-y-1 pb-4">
-      {items.map((item) => (
-        <Link key={item.title} href={item.url} className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
-          {item.title}
-        </Link>
-      ))}
-    </AccordionContent>
-  </AccordionItem>
 );

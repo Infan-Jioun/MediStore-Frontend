@@ -83,6 +83,8 @@ const HeroSection = ({
                         <Image
                             src={imageSrc ?? ""}
                             alt={imageAlt ?? "Hero Image"}
+                            width={1200}
+                            height={800}
                             className="aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9] w-full object-cover transition-all duration-700 group-hover:scale-[1.02]"
                         />
 
