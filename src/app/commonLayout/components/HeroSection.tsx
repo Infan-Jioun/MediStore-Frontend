@@ -25,7 +25,7 @@ interface HeroSectionProps {
 const HeroSection = ({
     badge = "Premium Healthcare",
     heading = "Advanced Medical Solutions for Healthier Communities",
-    imageSrc = "https://images.unsplash.com/photo-1586773860418-dc22f8b874bc?q=80&w=2070&auto=format&fit=crop",
+    imageSrc = "https://i.ibb.co.com/W4xBpN24/Clean-online-pharmacy-hero-image-only-medicine-products-neatly-arranged-medicine-bottles-blister.jpg",
     imageAlt = "Modern Medical Facility",
     features = [
         {
@@ -86,9 +86,9 @@ const HeroSection = ({
                             className="aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9] w-full object-cover transition-all duration-700 group-hover:scale-[1.02]"
                         />
 
-                  
 
-                  
+
+
                     </div>
 
                     {/* Floating Red Elements - Hidden on mobile */}
