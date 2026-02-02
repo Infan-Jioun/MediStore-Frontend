@@ -41,10 +41,10 @@ const Navbar = ({ className }: { className?: string }) => {
       <div className="container max-w-8xl mx-auto">
         {/* Desktop */}
         <nav className="hidden lg:flex  items-center justify-between">
-          <a href="/" className="flex items-center gap-2 font-bold text-lg">
+          <Link href="/" className="flex items-center gap-2 font-bold text-lg">
             <Pill className="size-6" />
             MediStore
-          </a>
+          </Link>
 
           <NavigationMenu>
             <NavigationMenuList>
@@ -90,7 +90,7 @@ const Navbar = ({ className }: { className?: string }) => {
                 <Link href="/login">Login</Link>
               </Button>
               <Button asChild>
-                <Link href="/register">Register</Link>
+                <Link href="/signup">Register</Link>
               </Button>
             </div>
           ) : (
@@ -100,7 +100,7 @@ const Navbar = ({ className }: { className?: string }) => {
 
         {/* Mobile */}
         <div className="lg:hidden flex items-center justify-between">
-          <a href="/" className="font-bold">MediStore</a>
+          <Link href="/" className="font-bold">MediStore</Link>
 
           <Sheet>
             <SheetTrigger asChild>
@@ -152,7 +152,7 @@ const Navbar = ({ className }: { className?: string }) => {
                 {CURRENT_ROLE === "GUEST" && (
                   <>
                     <MobileLink title="Login" url="/login" />
-                    <MobileLink title="Register" url="/register" />
+                    <MobileLink title="Register" url="/signup" />
                   </>
                 )}
               </Accordion>
@@ -199,9 +199,9 @@ const NavDropdown = ({
 );
 
 const MobileLink = ({ title, url }: { title: string; url: string }) => (
-  <a href={url} className="block text-md font-semibold">
+  <Link href={url} className="block text-md font-semibold">
     {title}
-  </a>
+  </Link>
 );
 
 const MobileGroup = ({
@@ -215,9 +215,9 @@ const MobileGroup = ({
     <AccordionTrigger className="font-semibold">{title}</AccordionTrigger>
     <AccordionContent className="space-y-2">
       {items.map((item) => (
-        <a key={item.title} href={item.url} className="block pl-4">
+        <Link key={item.title} href={item.url} className="block pl-4">
           {item.title}
-        </a>
+        </Link>
       ))}
     </AccordionContent>
   </AccordionItem>
