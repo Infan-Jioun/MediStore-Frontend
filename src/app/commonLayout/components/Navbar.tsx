@@ -193,7 +193,7 @@ const renderMobileUserActions = (isLoggedIn: boolean, onLogout: () => void) => {
     return (
       <div className="space-y-3">
         <Button className="w-full" variant="outline" asChild><Link href="/login">Login</Link></Button>
-        <Button className="w-full" asChild><Link href="/register">Register</Link></Button>
+        <Button className="w-full" asChild><Link href="/signup">Register</Link></Button>
       </div>
     );
   }
