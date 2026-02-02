@@ -1,11 +1,20 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  
+
   images: {
-    domains: ['images.unsplash.com', 'lh3.googleusercontent.com' , "i.ibb.co.com"],
-  
-  }
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "i.ibb.co.com",
+        port: "",
+        pathname: "/**",
+      },
+
+
+
+    ]
+  },
 };
 
 export default nextConfig;

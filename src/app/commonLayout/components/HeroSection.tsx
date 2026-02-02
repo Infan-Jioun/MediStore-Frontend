@@ -34,9 +34,7 @@ export default function HeroSection() {
                                     Shop Now <ArrowRight className="size-5" />
                                 </Link>
                             </Button>
-                            <Button
-                                size="lg"
-                                variant="outline"
+                            <Button size="lg" variant="outline"
                                 className="h-14 px-10 text-lg"
                                 asChild
                             >
@@ -48,25 +46,24 @@ export default function HeroSection() {
                             </Button>
                         </div>
 
-                        <div className="grid grid-cols-3 gap-4 pt-8 border-t">
+                        <div className="grid grid-cols-2 gap-4 pt-8 p-3 border-t">
                             <div className="flex flex-col gap-1">
-                                <Truck className="size-6 text-primary" />
+                                <Truck className="size-6 text-red-500" />
                                 <span className="text-sm font-bold">Cash On Delivery</span>
                             </div>
 
                             <div className="flex flex-col gap-1">
-                                <Clock className="size-6 text-primary" />
+                                <Clock className="size-6 text-red-500" />
                                 <span className="text-sm font-bold">24/7 Support</span>
                             </div>
                         </div>
                     </div>
 
-                    <div className="lg:col-span-7 relative h-[500px] lg:h-[650px] w-full animate-in fade-in zoom-in duration-1000">
-                        <div className="absolute inset-0 bg-primary/10 rounded-[3rem] -rotate-3" />
+                    <div className="md:block hidden lg:col-span-7 relative h-[500px] lg:h-[650px] w-full animate-in fade-in zoom-in duration-1000">
+                       
                         <div className="relative h-full w-full rounded-[3rem] overflow-hidden border-8 border-background shadow-2xl rotate-1">
                             <Image
-                                src="https://i.ibb.co.com/GvsYcgYN/images-1.jpg"
-                                alt="Healthcare Professional"
+                                src="https://i.ibb.co.com/GvsYcgYN/images-1.jpg" alt="MediStore"
                                 fill
                                 className="object-cover"
                                 priority
