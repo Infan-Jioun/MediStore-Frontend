@@ -5,6 +5,7 @@ import {
   Bell,
   ChevronsUpDown,
   CreditCard,
+  Loader2,
   LogOut,
   Sparkles,
 } from "lucide-react"
@@ -29,6 +30,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/app/(dashboardLayout)/components/ui/sidebar"
+import { useRouter } from "next/navigation"
+import { authClient } from "@/lib/auth-client"
 
 export function NavUser({
   user,
@@ -40,7 +43,18 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
-
+  const router = useRouter();
+  const { data, isPending } = authClient.useSession();
+  const handleLogout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/login");
+          router.refresh();
+        },
+      },
+    });
+  };
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -81,31 +95,25 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
+
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
+
+
+
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
+            <div className="flex items-center gap-4">
+              {isPending ? (
+                <Loader2 className="size-5 animate-spin text-muted-foreground" />
+              ) : (
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              )}
+            </div>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
