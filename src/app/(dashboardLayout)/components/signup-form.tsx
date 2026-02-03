@@ -90,40 +90,43 @@ export function SignupForm({
 
       <FieldGroup>
         <form.Field name="name" children={(field) => {
-          const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0
+          const isInvalid =
+            field.state.meta.isTouched && !field.state.meta.isValid;
           return (
             <Field data-invalid={isInvalid}>
               <FieldLabel htmlFor={field.name}>Full Name</FieldLabel>
               <Input id={field.name} name={field.name} type="text" placeholder="John Doe" value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
               />
-              {isInvalid && <FieldError className="text-red-500">{field.state.meta.errors.join(", ")}</FieldError>}
+              {isInvalid && <FieldError className="text-red-500" errors={field.state.meta.errors} />}
             </Field>
           )
         }} />
 
         <form.Field name="email" children={(field) => {
-          const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0
+          const isInvalid =
+            field.state.meta.isTouched && !field.state.meta.isValid
           return (
             <Field data-invalid={isInvalid}>
               <FieldLabel htmlFor={field.name}>Your Email</FieldLabel>
               <Input id={field.name} name={field.name} type="email" placeholder="Enter your email" value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
               />
-              {isInvalid && <FieldError className="text-red-500">{field.state.meta.errors.join(", ")}</FieldError>}
+              {isInvalid && <FieldError className="text-red-500" errors={field.state.meta.errors} />}
             </Field>
           )
         }} />
 
         <form.Field name="password" children={(field) => {
-          const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0
+          const isInvalid =
+            field.state.meta.isTouched && !field.state.meta.isValid
           return (
             <Field data-invalid={isInvalid}>
               <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-              <Input id={field.name} name={field.name} type="password" placeholder="Enter your password" value={field.state.value}
+              <Input id={field.name} name={field.name} type="password" placeholder="Provide Your Password" value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
               />
-              {isInvalid && <FieldError className="text-red-500">{field.state.meta.errors.join(", ")}</FieldError>}
+              {isInvalid && <FieldError className="text-red-500" errors={field.state.meta.errors} />}
             </Field>
           )
         }} />

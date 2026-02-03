@@ -95,7 +95,8 @@ export function LoginForm({
 
               <form.Field name="email">
                 {(field) => {
-                  const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid
                   return (
                     <Field data-invalid={isInvalid}>
                       <FieldLabel htmlFor={field.name}>Email</FieldLabel>
@@ -106,7 +107,7 @@ export function LoginForm({
                         value={field.state.value}
                         onChange={(e) => field.handleChange(e.target.value)}
                       />
-                      {isInvalid && <FieldError className="text-red-500">{field.state.meta.errors.join(", ")}</FieldError>}
+                      {isInvalid && <FieldError className="text-red-500" errors={field.state.meta.errors} />}
                     </Field>
                   )
                 }}
@@ -114,9 +115,12 @@ export function LoginForm({
 
               <form.Field name="password">
                 {(field) => {
-                  const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid
                   return (
+
                     <Field data-invalid={isInvalid}>
+
                       <div className="flex items-center">
                         <FieldLabel htmlFor={field.name}>Password</FieldLabel>
                         <Link href="/forgot-password" className="ml-auto text-sm underline-offset-4 hover:underline">
@@ -129,7 +133,7 @@ export function LoginForm({
                         value={field.state.value} placeholder="Privide Your Password"
                         onChange={(e) => field.handleChange(e.target.value)}
                       />
-                      {isInvalid && <FieldError className="text-red-500">{field.state.meta.errors.join(", ")}</FieldError>}
+                      {isInvalid && <FieldError className="text-red-500" errors={field.state.meta.errors} />}
                     </Field>
                   )
                 }}
