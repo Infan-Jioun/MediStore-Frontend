@@ -23,7 +23,7 @@ interface HeroSectionProps {
 }
 
 const HeroSection = ({
-    badge = "Premium Healthcare",
+    badge = "Premium Medistore",
     heading = "Advanced Medical Solutions for Healthier Communities",
     imageSrc = "https://i.ibb.co.com/W4xBpN24/Clean-online-pharmacy-hero-image-only-medicine-products-neatly-arranged-medicine-bottles-blister.jpg",
     imageAlt = "Modern Medical Facility",
@@ -50,13 +50,13 @@ const HeroSection = ({
     className,
 }: HeroSectionProps) => {
     return (
-        <section className={cn("  relative py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32 overflow-hidden", className)}>
-            {/* Background Elements */}
+        <section className={cn("  relative py-10 sm:py-16 md:py-20 lg:py-16  overflow-hidden", className)}>
+            
             <div className="absolute inset-0 bg-gradient-to-br from-red-50 via-white to-rose-50"></div>
 
 
             <div className="container max-w-7xl mx-auto relative z-10 px-4 sm:px-6 lg:px-8">
-                {/* Header Section */}
+               
                 <div className="mb-10 sm:mb-12 md:mb-14 lg:mb-16 flex flex-col items-center gap-4 sm:gap-5 md:gap-6 text-center">
                     <Badge
                         variant="secondary"
@@ -73,12 +73,10 @@ const HeroSection = ({
                     </p>
                 </div>
 
-                {/* Image Section with Red Accents */}
                 <div className="relative mx-auto max-w-full lg:max-w-5xl xl:max-w-6xl group px-4 sm:px-0">
-                    {/* Red Gradient Border */}
-                    <div className="absolute -inset-1 sm:-inset-2 bg-gradient-to-r from-red-500 via-rose-500 to-pink-500 rounded-2xl sm:rounded-3xl blur-lg sm:blur-xl opacity-20 sm:opacity-30 group-hover:opacity-30 sm:group-hover:opacity-40 transition duration-1000"></div>
+           
+                   
 
-                    {/* Main Image Container */}
                     <div className="relative overflow-hidden rounded-xl sm:rounded-2xl border border-red-100 sm:border-2 bg-white shadow-lg sm:shadow-xl lg:shadow-2xl shadow-red-100/30 sm:shadow-red-100/50">
                         <Image
                             src={imageSrc ?? ""}
@@ -89,13 +87,9 @@ const HeroSection = ({
                         />
 
 
-
-
                     </div>
 
-                    {/* Floating Red Elements - Hidden on mobile */}
-                    <div className="hidden sm:block absolute -top-4 -left-4 sm:-top-6 sm:-left-6 z-10 w-12 h-12 sm:w-16 sm:h-16 bg-red-500 rounded-full blur-sm opacity-20 animate-pulse"></div>
-                    <div className="hidden sm:block absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 z-10 w-14 h-14 sm:w-20 sm:h-20 bg-rose-500 rounded-full blur-sm opacity-20 animate-pulse delay-1000"></div>
+             
                 </div>
 
                 {/* Features Section with Red Theme */}

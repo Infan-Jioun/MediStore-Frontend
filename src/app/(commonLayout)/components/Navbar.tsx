@@ -7,28 +7,32 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/app/commonLayout/components/ui/accordion";
-import { Button } from "@/app/commonLayout/components/ui/button";
+} from "./../components/ui/accordion";
+import { Button } from "./../components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-} from "@/app/commonLayout/components/ui/navigation-menu";
+} from "./../components/ui/navigation-menu";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/app/commonLayout/components/ui/sheet";
+} from "./../components/ui/sheet";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { UserRole } from "@/app/type/user";
 
 const Navbar = ({ className }: { className?: string }) => {
   const router = useRouter();
+  const pathname = usePathname();
+  if (pathname.startsWith("/admin-dashboard") || pathname.startsWith("/seller-dashboard")) {
+    return null;
+  }
   const { data: session, isPending } = authClient.useSession();
 
   const userRole = (session?.user as any)?.role?.toUpperCase() as UserRole || "CUSTOMER";
@@ -136,7 +140,7 @@ const renderRoleLinks = (role: UserRole) => {
     case "SELLER":
       return (
         <>
-          <NavLink title="Dashboard" url="/seller/dashboard" />
+          <NavLink title="Dashboard" url="/seller-dashboard" />
           <NavLink title="Inventory" url="/seller/medicines" />
           <NavLink title="Orders" url="/seller/orders" />
           <NavLink title="Analytics" url="/seller/analytics" />
