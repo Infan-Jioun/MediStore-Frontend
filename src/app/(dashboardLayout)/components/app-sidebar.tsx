@@ -14,10 +14,10 @@ import {
   SquareTerminal,
 } from "lucide-react"
 
-import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
+import { NavMain } from "@/app/(dashboardLayout)/components/nav-main"
+import { NavProjects } from "@/app/(dashboardLayout)/components/nav-projects"
+import { NavSecondary } from "@/app/(dashboardLayout)/components/nav-secondary"
+import { NavUser } from "@/app/(dashboardLayout)/components/nav-user"
 import {
   Sidebar,
   SidebarContent,
@@ -26,7 +26,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/app/(dashboardLayout)/components/ui/sidebar"
 
 const data = {
   user: {

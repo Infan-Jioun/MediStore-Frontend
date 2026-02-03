@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 
-import { Logo, LogoImage, LogoText } from "@/components/logo";
+import { Logo, LogoImage, LogoText } from "@/app/(dashboardLayout)/components/logo";
 import Link from "next/link";
 import { Pill } from "lucide-react";
 import { usePathname } from "next/navigation";

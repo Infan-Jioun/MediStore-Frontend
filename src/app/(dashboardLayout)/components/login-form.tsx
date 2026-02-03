@@ -2,22 +2,22 @@
 
 import { useState } from "react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/app/(dashboardLayout)/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/app/(dashboardLayout)/components/ui/card"
 import {
   Field,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+} from "@/app/(dashboardLayout)/components/ui/field"
+import { Input } from "@/app/(dashboardLayout)/components/ui/input"
 import Link from "next/link"
 import { useForm } from "@tanstack/react-form"
 import * as Z from "zod"
@@ -126,7 +126,7 @@ export function LoginForm({
                       <Input
                         id={field.name}
                         type="password"
-                        value={field.state.value}
+                        value={field.state.value} placeholder="Privide Your Password"
                         onChange={(e) => field.handleChange(e.target.value)}
                       />
                       {isInvalid && <FieldError className="text-red-500">{field.state.meta.errors.join(", ")}</FieldError>}

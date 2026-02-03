@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/app/(dashboardLayout)/components/ui/button"
 import {
   Field,
   FieldDescription,
@@ -10,8 +10,8 @@ import {
   FieldGroup,
   FieldLabel,
   FieldSeparator,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+} from "@/app/(dashboardLayout)/components/ui/field"
+import { Input } from "@/app/(dashboardLayout)/components/ui/input"
 import Link from "next/link"
 import { useForm } from "@tanstack/react-form";
 import * as Z from "zod";

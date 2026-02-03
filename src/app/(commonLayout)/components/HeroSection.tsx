@@ -3,8 +3,8 @@ import React from "react";
 
 import { cn } from "@/lib/utils";
 
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/app/(dashboardLayout)/components/ui/badge";
+import { Separator } from "@/app/(dashboardLayout)/components/ui/separator";
 import Image from "next/image";
 
 interface Feature {
