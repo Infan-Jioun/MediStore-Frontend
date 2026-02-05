@@ -8,19 +8,23 @@ export const adminRoutes: Route[] = [
         items: [
             {
                 title: "Add Categories",
-                url: "/categories",
+                url: "/add-categories",
+            },
+            {
+              title : "All Categories",
+              url : "/all-categories"
             },
             {
                 title: "Users Management",
-                url: "/users",
+                url: "/users-management",
             },
             {
                 title: "Orders Management",
-                url: "orders",
+                url: "orders-management",
             },
             {
                 title: "Sellers Management",
-                url: "/sellers",
+                url: "/sellers-menagement",
             },
         ],
     },

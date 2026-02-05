@@ -34,6 +34,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../components/ui/sheet";
+import { Roles } from "@/constant/roles";
+import { UserRole } from "@/app/type/user";
 
 const Navbar = ({ className }: { className?: string }) => {
   const router = useRouter();
@@ -47,6 +49,7 @@ const Navbar = ({ className }: { className?: string }) => {
   }
 
   const { data: session, isPending } = authClient.useSession();
+  const userRole = (session?.user as any)?.role?.toUpperCase() as UserRole || "CUSTOMER";
   const isLoggedIn = !!session;
 
   const handleLogout = async () => {
@@ -83,9 +86,16 @@ const Navbar = ({ className }: { className?: string }) => {
                 <NavLink title="Home" url="/" />
                 <NavLink title="Shop" url="/shop" />
                 <NavLink title="AllCategory" url="/category" />
-                {
-                  session?.user ? <><NavLink title="Dashboard" url="/dashboard" /></> : <></>
-                }
+                <NavLink
+                  title="Dashboard"
+                  url={
+                    userRole === "ADMIN"
+                      ? "/admin-dashboard"
+                      : userRole === "SELLER"
+                        ? "/seller-dashboard"
+                        : "/dashboard"
+                  }
+                />
                 <NavLink title="About" url="/about" />
               </NavigationMenuList>
             </NavigationMenu>
