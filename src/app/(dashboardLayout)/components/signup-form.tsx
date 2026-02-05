@@ -147,7 +147,12 @@ export function SignupForm({
         <Field>
 
           <FieldDescription className="mt-4 text-center">
-            Already have an account? <Link href="/login" className="underline underline-offset-4  text-red-500 hover:text-red-600  font-bold ">Sign in</Link>
+            Seller Account Created Now? <Link href="/sellerSignup" className="underline underline-offset-4  text-red-500 
+            hover:text-red-600  font-bold ">SellerSignup</Link>
+            <br />
+            Already have an account? <Link href="/login" className="underline underline-offset-4  text-red-500 hover:text-red-600 mt-5 font-bold ">Sign in</Link> 
+
+
           </FieldDescription>
         </Field>
       </FieldGroup>
