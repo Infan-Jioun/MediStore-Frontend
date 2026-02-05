@@ -50,7 +50,7 @@ export function AppSidebar({ user, ...props }:
         <Sidebar {...props}>
 
             <SidebarContent>
-                {/* We create a SidebarGroup for each parent. */}
+
                 {routes.map((item) => (
                     <SidebarGroup key={item.title}>
                         <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
