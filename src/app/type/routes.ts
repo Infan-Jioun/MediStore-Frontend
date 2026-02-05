@@ -1,7 +1,10 @@
+import { LucideIcon } from "lucide-react";
+
 export type Route = {
     title: string;
+    icon: LucideIcon
     items: {
         title: string;
-        href: string;
+        url: string;
     }[];
 };

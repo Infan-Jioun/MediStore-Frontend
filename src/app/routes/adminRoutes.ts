@@ -1,24 +1,26 @@
+import { LayoutDashboard } from "lucide-react";
 import { Route } from "../type/routes";
 
 export const adminRoutes: Route[] = [
     {
         title: "MediStore Admin",
+        icon: LayoutDashboard,
         items: [
             {
                 title: "Add Categories",
-                href: "/categories",
+                url: "/categories",
             },
             {
                 title: "Users Management",
-                href: "/users",
+                url: "/users",
             },
             {
                 title: "Orders Management",
-                href: "orders",
+                url: "orders",
             },
             {
                 title: "Sellers Management",
-                href: "/sellers",
+                url: "/sellers",
             },
         ],
     },

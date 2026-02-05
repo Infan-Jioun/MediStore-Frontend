@@ -1,20 +1,26 @@
+import { LayoutDashboard } from "lucide-react";
 import { Route } from "../type/routes";
 
-export const customerRoutes: Route[] = [
+export const sellerRoutes: Route[] = [
     {
-        title: "Customer",
+        title: "Seller Dashboard",
+        icon: LayoutDashboard,
         items: [
             {
-                title: "My Orders",
-                href: "/orders",
+                title: "My Medicines",
+                url: "/medicines",
             },
             {
-                title: "My Profile",
-                href: "/profile",
+                title: "Add Medicine",
+                url: "/medicines/create",
             },
             {
-                title: "My Reviews",
-                href: "/reviews",
+                title: "Orders",
+                url: "/orders",
+            },
+            {
+                title: "Profile",
+                url: "/profile",
             },
         ],
     },

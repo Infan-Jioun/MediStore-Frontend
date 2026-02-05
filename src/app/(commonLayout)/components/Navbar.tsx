@@ -1,41 +1,52 @@
 "use client";
 
-import { Menu, Pill, ShoppingCart, User, LogIn, LogOut, Loader2 } from "lucide-react";
+import {
+  Menu,
+  Pill,
+  ShoppingCart,
+  User,
+  LogIn,
+  LogOut,
+  Loader2,
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { authClient } from "@/lib/auth-client";
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "./../components/ui/accordion";
-import { Button } from "./../components/ui/button";
+} from "../components/ui/accordion";
+import { Button } from "../components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-} from "./../components/ui/navigation-menu";
+} from "../components/ui/navigation-menu";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "./../components/ui/sheet";
-import Link from "next/link";
-import { authClient } from "@/lib/auth-client";
-import { usePathname, useRouter } from "next/navigation";
-import { UserRole } from "@/app/type/user";
+} from "../components/ui/sheet";
 
 const Navbar = ({ className }: { className?: string }) => {
   const router = useRouter();
   const pathname = usePathname();
-  if (pathname.startsWith("/admin-dashboard") || pathname.startsWith("/seller-dashboard")) {
+
+  if (
+    pathname.startsWith("/admin-dashboard") ||
+    pathname.startsWith("/seller-dashboard")
+  ) {
     return null;
   }
-  const { data: session, isPending } = authClient.useSession();
 
-  const userRole = (session?.user as any)?.role?.toUpperCase() as UserRole || "CUSTOMER";
+  const { data: session, isPending } = authClient.useSession();
   const isLoggedIn = !!session;
 
   const handleLogout = async () => {
@@ -50,11 +61,19 @@ const Navbar = ({ className }: { className?: string }) => {
   };
 
   return (
-    <section className={cn("border-b py-4 bg-background sticky top-0 z-50", className)}>
+    <section
+      className={cn(
+        "border-b py-4 bg-background sticky top-0 z-50",
+        className
+      )}
+    >
       <div className="container max-w-7xl mx-auto px-4">
         <nav className="hidden lg:flex items-center justify-between">
           <div className="flex items-center gap-8">
-            <Link href="/" className="flex items-center gap-2 font-bold text-xl text-red-500">
+            <Link
+              href="/"
+              className="flex items-center gap-2 font-bold text-xl text-red-500"
+            >
               <Pill className="size-6" />
               MediStore
             </Link>
@@ -63,7 +82,11 @@ const Navbar = ({ className }: { className?: string }) => {
               <NavigationMenuList className="gap-2">
                 <NavLink title="Home" url="/" />
                 <NavLink title="Shop" url="/shop" />
-                {!isPending && renderRoleLinks(userRole)}
+                <NavLink title="AllCategory" url="/category" />
+                {
+                  session?.user ? <><NavLink title="Dashboard" url="/dashboard" /></> : <></>
+                }
+                <NavLink title="About" url="/about" />
               </NavigationMenuList>
             </NavigationMenu>
           </div>
@@ -72,7 +95,10 @@ const Navbar = ({ className }: { className?: string }) => {
             {isPending ? (
               <Loader2 className="size-5 animate-spin text-muted-foreground" />
             ) : (
-              renderUserActions(isLoggedIn, userRole, handleLogout)
+              <UserActions
+                isLoggedIn={isLoggedIn}
+                onLogout={handleLogout}
+              />
             )}
           </div>
         </nav>
@@ -84,38 +110,57 @@ const Navbar = ({ className }: { className?: string }) => {
           </Link>
 
           <div className="flex items-center gap-2">
-            {!isPending && userRole === "CUSTOMER" && (
-              <Button variant="outline" size="icon" asChild>
-                <Link href="/cart"><ShoppingCart className="size-4" /></Link>
-              </Button>
-            )}
+            <Button variant="outline" size="icon" asChild>
+              <Link href="/cart">
+                <ShoppingCart className="size-4" />
+              </Link>
+            </Button>
 
             <Sheet>
               <SheetTrigger asChild>
-                <Button size="icon" variant="outline"><Menu className="size-5" /></Button>
+                <Button size="icon" variant="outline">
+                  <Menu className="size-5" />
+                </Button>
               </SheetTrigger>
+
               <SheetContent side="right" className="w-[300px]">
                 <SheetHeader className="text-left border-b pb-4">
                   <SheetTitle className="flex items-center gap-2">
-                    <Pill className="size-5 text-primary" /> MediStore
+                    <Pill className="size-5 text-primary" />
+                    MediStore
                   </SheetTitle>
                 </SheetHeader>
+
                 <div className="flex flex-col justify-between h-[90%] py-6">
-                  <Accordion type="single" collapsible className="w-full">
-                    <AccordionItem value="home" className="border-none">
-                      <MobileLink title="Home" url="/" />
+                  <Accordion type="single" collapsible>
+                    <AccordionItem value="main" className="border-none">
+                      <AccordionTrigger className="font-semibold">
+                        Menu
+                      </AccordionTrigger>
+                      <AccordionContent className="space-y-2">
+                        <MobileLink title="Home" url="/" />
+                        <MobileLink title="Shop" url="/shop" />
+                        <MobileLink title="Orders" url="/orders" />
+                        <MobileLink
+                          title="Prescriptions"
+                          url="/prescriptions"
+                        />
+                        <MobileLink title="Cart" url="/cart" />
+                        <MobileLink title="Profile" url="/profile" />
+                      </AccordionContent>
                     </AccordionItem>
-                    <AccordionItem value="shop" className="border-none">
-                      <MobileLink title="Shop" url="/shop" />
-                    </AccordionItem>
-                    {!isPending && renderMobileRoleLinks(userRole)}
                   </Accordion>
 
                   <div className="border-t pt-6">
                     {isPending ? (
-                      <div className="flex justify-center"><Loader2 className="animate-spin" /></div>
+                      <div className="flex justify-center">
+                        <Loader2 className="animate-spin" />
+                      </div>
                     ) : (
-                      renderMobileUserActions(isLoggedIn, handleLogout)
+                      <MobileUserActions
+                        isLoggedIn={isLoggedIn}
+                        onLogout={handleLogout}
+                      />
                     )}
                   </div>
                 </div>
@@ -128,40 +173,13 @@ const Navbar = ({ className }: { className?: string }) => {
   );
 };
 
-const renderRoleLinks = (role: UserRole) => {
-  switch (role) {
-    case "CUSTOMER":
-      return (
-        <>
-          <NavLink title="My Orders" url="/orders" />
-          <NavLink title="Prescriptions" url="/prescriptions" />
-        </>
-      );
-    case "SELLER":
-      return (
-        <>
-          <NavLink title="Dashboard" url="/seller-dashboard" />
-          <NavLink title="Inventory" url="/seller/medicines" />
-          <NavLink title="Orders" url="/seller/orders" />
-          <NavLink title="Analytics" url="/seller/analytics" />
-        </>
-      );
-    case "ADMIN":
-      return (
-        <>
-          <NavLink title="Dashboard" url="/admin/dashboard" />
-          <NavLink title="Users" url="/admin/users" />
-          <NavLink title="Sellers" url="/admin/sellers" />
-          <NavLink title="Categories" url="/admin/categories" />
-          <NavLink title="Orders" url="/admin/orders" />
-        </>
-      );
-    default:
-      return null;
-  }
-};
-
-const renderUserActions = (isLoggedIn: boolean, role: UserRole, onLogout: () => void) => {
+const UserActions = ({
+  isLoggedIn,
+  onLogout,
+}: {
+  isLoggedIn: boolean;
+  onLogout: () => void;
+}) => {
   if (!isLoggedIn) {
     return (
       <div className="flex gap-2">
@@ -176,119 +194,38 @@ const renderUserActions = (isLoggedIn: boolean, role: UserRole, onLogout: () => 
       </div>
     );
   }
+
   return (
     <div className="flex items-center gap-3">
-      {role === "CUSTOMER" && (
-        <Button variant="outline" size="icon" asChild>
-          <Link href="/cart">
-            <ShoppingCart className="size-5" />
-          </Link>
-        </Button>
-      )}
+      <Button variant="outline" size="icon" asChild>
+        <Link href="/cart">
+          <ShoppingCart className="size-5" />
+        </Link>
+      </Button>
       <Button variant="outline" size="icon" asChild>
         <Link href="/profile">
           <User className="size-5" />
         </Link>
       </Button>
-      <Button variant="destructive" size="sm" className="gap-2" onClick={onLogout}>
+      <Button variant="destructive" size="sm" onClick={onLogout}>
         <LogOut className="size-4" /> Logout
       </Button>
     </div>
   );
 };
 
-const renderMobileRoleLinks = (role: UserRole) => {
-  switch (role) {
-    case "CUSTOMER":
-      return (
-        <>
-          <AccordionItem value="customer-links" className="border-none">
-            <AccordionTrigger className="text-base font-semibold py-2 hover:no-underline">
-              Customer
-            </AccordionTrigger>
-            <AccordionContent className="space-y-1 pb-4">
-              <Link href="/orders" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
-                My Orders
-              </Link>
-              <Link href="/prescriptions" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
-                Prescriptions
-              </Link>
-              <Link href="/cart" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
-                Cart
-              </Link>
-              <Link href="/profile" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
-                Profile
-              </Link>
-            </AccordionContent>
-          </AccordionItem>
-        </>
-      );
-    case "SELLER":
-      return (
-        <AccordionItem value="seller-links" className="border-none">
-          <AccordionTrigger className="text-base font-semibold py-2 hover:no-underline">
-            Seller Panel
-          </AccordionTrigger>
-          <AccordionContent className="space-y-1 pb-4">
-            <Link href="/seller/dashboard" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
-              Dashboard
-            </Link>
-            <Link href="/seller/medicines" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
-              Inventory
-            </Link>
-            <Link href="/seller/orders" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
-              Orders
-            </Link>
-            <Link href="/seller/analytics" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
-              Analytics
-            </Link>
-            <Link href="/profile" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
-              Profile
-            </Link>
-          </AccordionContent>
-        </AccordionItem>
-      );
-    case "ADMIN":
-      return (
-        <AccordionItem value="admin-links" className="border-none">
-          <AccordionTrigger className="text-base font-semibold py-2 hover:no-underline">
-            Admin Panel
-          </AccordionTrigger>
-          <AccordionContent className="space-y-1 pb-4">
-            <Link href="/admin/dashboard" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
-              Dashboard
-            </Link>
-            <Link href="/admin/users" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
-              Users
-            </Link>
-            <Link href="/admin/sellers" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
-              Sellers
-            </Link>
-            <Link href="/admin/categories" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
-              Categories
-            </Link>
-            <Link href="/admin/orders" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
-              Orders
-            </Link>
-            <Link href="/profile" className="block pl-4 py-2 text-sm text-muted-foreground hover:text-primary border-l ml-2">
-              Profile
-            </Link>
-          </AccordionContent>
-        </AccordionItem>
-      );
-    default:
-      return null;
-  }
-};
-
-const renderMobileUserActions = (isLoggedIn: boolean, onLogout: () => void) => {
+const MobileUserActions = ({
+  isLoggedIn,
+  onLogout,
+}: {
+  isLoggedIn: boolean;
+  onLogout: () => void;
+}) => {
   if (!isLoggedIn) {
     return (
       <div className="space-y-3">
         <Button className="w-full" variant="outline" asChild>
-          <Link href="/login" className="flex items-center justify-center gap-2">
-            <LogIn className="size-4" /> Login
-          </Link>
+          <Link href="/login">Login</Link>
         </Button>
         <Button className="w-full" asChild>
           <Link href="/signup">Register</Link>
@@ -296,26 +233,27 @@ const renderMobileUserActions = (isLoggedIn: boolean, onLogout: () => void) => {
       </div>
     );
   }
+
   return (
     <div className="space-y-3">
       <Button className="w-full" variant="outline" asChild>
-        <Link href="/profile" className="flex items-center justify-center gap-2">
-          <User className="size-4" /> Profile
-        </Link>
+        <Link href="/profile">Profile</Link>
       </Button>
-      <Button className="w-full flex items-center justify-center gap-2" variant="destructive" onClick={onLogout} >
-        <LogOut className="size-4" /> Logout
+      <Button
+        className="w-full"
+        variant="destructive"
+        onClick={onLogout}
+      >
+        Logout
       </Button>
     </div>
   );
 };
 
-export { Navbar };
-
 const NavLink = ({ title, url }: { title: string; url: string }) => (
   <NavigationMenuItem className="list-none">
     <Link href={url} legacyBehavior passHref>
-      <NavigationMenuLink className="px-4 py-2 text-sm font-medium hover:text-primary transition-colors">
+      <NavigationMenuLink className="px-4 py-2 text-sm font-medium hover:text-primary">
         {title}
       </NavigationMenuLink>
     </Link>
@@ -323,7 +261,12 @@ const NavLink = ({ title, url }: { title: string; url: string }) => (
 );
 
 const MobileLink = ({ title, url }: { title: string; url: string }) => (
-  <Link href={url} className="block py-2 text-base font-medium hover:text-primary">
+  <Link
+    href={url}
+    className="block py-2 text-base font-medium hover:text-primary"
+  >
     {title}
   </Link>
 );
+
+export { Navbar };

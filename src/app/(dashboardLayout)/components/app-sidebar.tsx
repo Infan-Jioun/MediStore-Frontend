@@ -1,118 +1,74 @@
-"use client"
-
 import * as React from "react"
-import {
-    BookOpen,
-    Bot,
-    Frame,
-    LifeBuoy,
-    Map,
-    PieChart,
-    Pill,
-    Send,
-    Settings2,
-    SquareTerminal,
-} from "lucide-react"
 
-import { NavMain } from "@/app/(dashboardLayout)/components/nav-main"
-import { NavProjects } from "@/app/(dashboardLayout)/components/nav-projects"
-import { NavSecondary } from "@/app/(dashboardLayout)/components/nav-secondary"
-import { NavUser } from "@/app/(dashboardLayout)/components/nav-user"
+
 import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
+    SidebarGroup,
+    SidebarGroupContent,
+    SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarRail,
 } from "@/app/(dashboardLayout)/components/ui/sidebar"
-
-import Link from "next/link"
 import { Roles } from "@/constant/roles"
+import { adminRoutes } from "@/app/routes/adminRoutes"
+import { sellerRoutes } from "@/app/routes/sellerRoutes"
+import { customerRoutes } from "@/app/routes/customerRoutes"
+import Link from "next/link"
+import { NavUser } from "./nav-user"
 
-interface SidebarUser {
-    name: string
-    email: string
-    image?: string
-    role: Roles
-}
 
-interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-    user: SidebarUser | null
-}
+export function AppSidebar({ user, ...props }:
+    { user: { name: string, email: string, image: string, role: string } & React.ComponentProps<typeof Sidebar> }) {
+    let routes: Route[] = [];
+    switch (user?.role) {
+        case Roles.admin:
+            routes = adminRoutes
+            break;
+        case Roles.seller:
+            routes = sellerRoutes
+            break;
+        case Roles.customer:
+            routes = customerRoutes
+            break;
+        default: routes = [];
 
-export function AppSidebar({ user, ...props }: AppSidebarProps) {
+    }
 
     const sidebarData = {
         user: {
             name: user?.name ?? "MediStore User",
             email: user?.email ?? "m@example.com",
             avatar: user?.image ?? "/avatars/shadcn.jpg",
-        },
-        navMain: [
-            {
-                title: "Dashboard",
-                url: "/dashboard",
-                icon: SquareTerminal,
-                isActive: true,
-                items: [
-                    { title: "Overview", url: "/dashboard" },
-                    { title: "Orders", url: "/dashboard/orders" },
-                ],
-            },
-            {
-                title: "Medicines",
-                url: "/dashboard/medicines",
-                icon: Bot,
-                items: [
-                    { title: "All Medicines", url: "/dashboard/medicines" },
-                    { title: "Add Medicine", url: "/dashboard/medicines/create" },
-                ],
-            },
-            {
-                title: "Settings",
-                url: "/dashboard/settings",
-                icon: Settings2,
-                items: [
-                    { title: "Profile", url: "/dashboard/profile" },
-                ],
-            },
-        ],
-        navSecondary: [
-            { title: "Support", url: "/support", icon: LifeBuoy },
-            { title: "Feedback", url: "/feedback", icon: Send },
-        ],
-        projects: [],
+        }
     }
-
     return (
-        <Sidebar variant="inset" {...props}>
-            <SidebarHeader>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
-                            <Link
-                                href="/"
-                                className="flex items-center gap-2 font-bold text-xl text-red-500"
-                            >
-                                <Pill className="size-6" />
-                                MediStore
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarHeader>
+        <Sidebar {...props}>
 
             <SidebarContent>
-                <NavMain items={sidebarData.navMain} />
-                <NavProjects projects={sidebarData.projects} />
-                <NavSecondary
-                    items={sidebarData.navSecondary}
-                    className="mt-auto"
-                />
+                {/* We create a SidebarGroup for each parent. */}
+                {routes.map((item) => (
+                    <SidebarGroup key={item.title}>
+                        <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
+                        <SidebarGroupContent>
+                            <SidebarMenu>
+                                {item.items.map((item: any) => (
+                                    <SidebarMenuItem key={item.title}>
+                                        <SidebarMenuButton asChild>
+                                            <Link href={item.url}>{item.title}</Link>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                ))}
+                            </SidebarMenu>
+                        </SidebarGroupContent>
+                    </SidebarGroup>
+                ))}
             </SidebarContent>
-
+            <SidebarRail />
             <SidebarFooter>
                 <NavUser user={sidebarData.user} />
             </SidebarFooter>

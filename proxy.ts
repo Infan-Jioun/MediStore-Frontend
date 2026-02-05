@@ -2,32 +2,54 @@ import { Roles } from "@/constant/roles";
 import { userService } from "@/Services/user.service";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function proxy(request: NextRequest, response: NextResponse) {
+export async function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
     let isAuthenticated = false;
     let isAdmin = false;
     let isSeller = false;
-    const res = await userService.getSesstion();
-    if (res && res?.data) {
-        isAuthenticated = true;
-        isAdmin = res.data.user.role === Roles.admin;
-        isAdmin = res.data.user.role === Roles.seller;
+    let isCustomer = false;
+
+    try {
+        const res = await userService.getSesstion();
+
+        if (res?.data?.user) {
+            isAuthenticated = true;
+            const role = res.data.user.role;
+            isAdmin = role === Roles.admin;
+            isSeller = role === Roles.seller;
+            isCustomer = role === Roles.customer;
+        }
+    } catch (err) {
+        isAuthenticated = false;
     }
-    if (isAdmin && pathname.startsWith("/dashboard")) {
-        return NextResponse.redirect(new URL("/admin-dashboard", request.url))
+    if (!isAuthenticated) {
+        return NextResponse.redirect(new URL("/login", request.url));
     }
-    if (!isAdmin && pathname.startsWith("/admin-dashboard")) {
-        return NextResponse.redirect(new URL("/dashboard", request.url))
+    if (pathname.startsWith("/admin-dashboard") && !isAdmin) {
+        return NextResponse.redirect(new URL("/login", request.url));
     }
-    if (isSeller && pathname.startsWith("/dashboard")) {
-        return NextResponse.redirect(new URL("/seller-dashboard", request.url))
+    if (pathname.startsWith("/dashboard") && isAdmin) {
+        return NextResponse.redirect(new URL("/admin-dashboard", request.url));
     }
-    if (!isSeller && pathname.startsWith("/seller-dashboard")) {
-        return NextResponse.redirect(new URL("/dashboard", request.url))
+    if (pathname.startsWith("/seller-dashboard") && !isSeller) {
+        return NextResponse.redirect(new URL("/login", request.url));
     }
-    console.log(res?.data);
+    if (pathname.startsWith("/dashboard") && isSeller) {
+        return NextResponse.redirect(new URL("/seller-dashboard", request.url));
+    }
+    if (pathname.startsWith("/dashboard") && !isAdmin && !isSeller && !isCustomer) {
+        return NextResponse.redirect(new URL("/login", request.url));
+    }
+    return NextResponse.next();
 }
+
 export const config = {
-    matcher: ["/dashboard",
-        "/dashboard/:path*", "/admin-dashboard", "/admin-dashboard/:path*" , "/seller-dashboard" , "/seller-dashboard/:path*"],
-}
+    matcher: [
+        "/dashboard",
+        "/dashboard/:path*",
+        "/admin-dashboard",
+        "/admin-dashboard/:path*",
+        "/seller-dashboard",
+        "/seller-dashboard/:path*",
+    ],
+};

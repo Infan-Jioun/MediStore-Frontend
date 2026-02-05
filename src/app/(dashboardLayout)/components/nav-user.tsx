@@ -7,6 +7,7 @@ import {
   CreditCard,
   Loader2,
   LogOut,
+  LogOutIcon,
   Sparkles,
 } from "lucide-react"
 
@@ -50,7 +51,6 @@ export function NavUser({
       fetchOptions: {
         onSuccess: () => {
           router.push("/login");
-          router.refresh();
         },
       },
     });

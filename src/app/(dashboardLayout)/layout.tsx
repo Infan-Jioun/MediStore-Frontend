@@ -4,6 +4,7 @@ import { AppSidebar } from "./components/app-sidebar"
 import {
     SidebarInset,
     SidebarProvider,
+    SidebarTrigger,
 
 } from "./components/ui/sidebar"
 import { Roles } from "@/constant/roles";
@@ -12,14 +13,15 @@ export default async function DashboardLayout({ admin, seller, customer }: { chi
     const res = await userService.getSesstion()
     const users = res?.data
     console.log(" ", users);
-    const userInfo = users.user
+    const userInfo = users?.user
     return (
         <SidebarProvider>
             <AppSidebar user={userInfo} />
+            <SidebarTrigger />
             <SidebarInset>
                 <div className="flex flex-1 flex-col gap-4 p-4">
-                    {userInfo.role === Roles.admin ? admin : customer}
-                    {userInfo.role === Roles.seller ? seller : customer}
+                    {userInfo?.role === Roles.admin ? admin : customer}
+                    {userInfo?.role === Roles.seller ? seller : customer}
                 </div>
             </SidebarInset>
         </SidebarProvider>
