@@ -86,16 +86,16 @@ const Navbar = ({ className }: { className?: string }) => {
                 <NavLink title="Home" url="/" />
                 <NavLink title="Shop" url="/shop" />
                 <NavLink title="AllCategory" url="/category" />
-                <NavLink
+                {session?.user ? <> <NavLink
                   title="Dashboard"
                   url={
                     userRole === "ADMIN"
                       ? "/admin-dashboard"
                       : userRole === "SELLER"
                         ? "/seller-dashboard"
-                        : userRole === "CUSTOMER" ? "/customer-dashboard" : ""
+                        : "dashboard"
                   }
-                />
+                /> </> : < ></>}
 
                 <NavLink title="About" url="/about" />
               </NavigationMenuList>
@@ -122,7 +122,7 @@ const Navbar = ({ className }: { className?: string }) => {
 
           <div className="flex items-center gap-2">
             <Button variant="outline" size="icon" asChild>
-              <Link href="/cart">
+              <Link href="/orders">
                 <ShoppingCart className="size-4" />
               </Link>
             </Button>
@@ -164,7 +164,7 @@ const Navbar = ({ className }: { className?: string }) => {
 
                   <div className="border-t pt-6">
                     {isPending ? (
-                      <div className="flex justify-center">
+                      <div className="flex justify-center text-red-500">
                         <Loader2 className="animate-spin" />
                       </div>
                     ) : (
@@ -209,7 +209,7 @@ const UserActions = ({
   return (
     <div className="flex items-center gap-3">
       <Button variant="outline" size="icon" asChild>
-        <Link href="/cart">
+        <Link href="/orders">
           <ShoppingCart className="size-5" />
         </Link>
       </Button>

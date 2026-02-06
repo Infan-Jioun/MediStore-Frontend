@@ -7,10 +7,6 @@ export const customerRoutes: Route[] = [
         icon: LayoutDashboard,
         items: [
             {
-                title: "My Orders",
-                url: "/orders",
-            },
-            {
                 title: "My Profile",
                 url: "/profile",
             },

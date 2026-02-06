@@ -50,7 +50,7 @@ export default function Category() {
 
     return (
         <div className="mt-16">
-            <p className="text-center text-red-500 font-bold text-4xl">
+            <p className="text-center text-red-500 font-bold text-2xl lg:text-4xl">
                 -- Available Categories --
             </p>
 
@@ -79,12 +79,6 @@ export default function Category() {
                                 <CardTitle className="text-lg font-semibold text-red-500 text-center">
                                     {category.name}
                                 </CardTitle>
-
-                                <Link href={`/categories/${category.id}`}>
-                                    <Button size="sm" className="bg-red-500 hover:bg-red-600">
-                                        Details
-                                    </Button>
-                                </Link>
                             </CardContent>
                         </Card>
                     ))}
