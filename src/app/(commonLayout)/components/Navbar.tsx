@@ -93,9 +93,10 @@ const Navbar = ({ className }: { className?: string }) => {
                       ? "/admin-dashboard"
                       : userRole === "SELLER"
                         ? "/seller-dashboard"
-                        : "/dashboard"
+                        : userRole === "CUSTOMER" ? "/customer-dashboard" : ""
                   }
                 />
+
                 <NavLink title="About" url="/about" />
               </NavigationMenuList>
             </NavigationMenu>
