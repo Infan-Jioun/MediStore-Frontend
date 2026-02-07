@@ -20,6 +20,7 @@ import { sellerRoutes } from "@/app/routes/sellerRoutes"
 import { customerRoutes } from "@/app/routes/customerRoutes"
 import Link from "next/link"
 import { NavUser } from "./nav-user"
+import { Route } from "@/app/type/routes"
 
 
 export function AppSidebar({ user, ...props }:

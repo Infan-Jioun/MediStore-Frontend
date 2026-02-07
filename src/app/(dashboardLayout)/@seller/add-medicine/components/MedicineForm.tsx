@@ -2,8 +2,8 @@
 
 import { useForm } from "@tanstack/react-form"
 import { toast } from "sonner"
-import * as z from "zod"
 import { useEffect, useState } from "react"
+import { Pill, PlusCircle, Loader2, Image as ImageIcon, Banknote, Building2 } from "lucide-react"
 
 import {
     Card,
@@ -15,12 +15,11 @@ import {
 import {
     Field,
     FieldError,
-    FieldGroup,
     FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/app/(commonLayout)/components/ui/button"
+import { Button } from "@/components/ui/button"
 import {
     Select,
     SelectContent,
@@ -28,24 +27,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-
-const formSchema = z.object({
-    name: z.string().min(3, "Medicine name must be at least 3 characters"),
-    slug: z.string().optional(),
-    description: z.string().optional(),
-    price: z.string()
-        .min(1, "Price is required")
-        .refine((val) => !isNaN(Number(val)) && Number(val) > 0, "Must be a positive number"),
-    stock: z.string()
-        .optional()
-        .refine((val) => !val || (!isNaN(Number(val)) && Number(val) >= 0), "Must be a non-negative number"),
-    manufacturer: z.string().min(2, "Manufacturer name is required"),
-    dosage: z.string().optional(),
-    imageUrl: z.string().url("Please provide a valid image URL"),
-    categoryId: z.string().min(1, "Please select a category"),
-})
-
-type FormValues = z.infer<typeof formSchema>
 
 type Category = {
     id: string
@@ -55,35 +36,27 @@ type Category = {
 export default function AddMedicine() {
     const [categories, setCategories] = useState<Category[]>([])
     const [loadingCategories, setLoadingCategories] = useState(true)
-    const [categoriesError, setCategoriesError] = useState<string | null>(null)
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
-    // Fetch categories on mount
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                setLoadingCategories(true)
                 const res = await fetch("https://medi-stores-backend.vercel.app/api/categories", {
                     credentials: "include",
                 })
-
-                if (!res.ok) {
-                    throw new Error("Failed to load categories")
-                }
-
+                if (!res.ok) throw new Error()
                 const data = await res.json()
                 setCategories(data)
-            } catch (err) {
-                setCategoriesError("Could not load categories. Please try again.")
-                console.error(err)
+            } catch {
+                toast.error("Could not load categories")
             } finally {
                 setLoadingCategories(false)
             }
         }
-
         fetchCategories()
     }, [])
 
-    const form = useForm<FormValues>({
+    const form = useForm({
         defaultValues: {
             name: "",
             description: "",
@@ -94,233 +67,246 @@ export default function AddMedicine() {
             imageUrl: "",
             categoryId: "",
         },
-        validators: {
-            onSubmit: formSchema,
-        },
         onSubmit: async ({ value }) => {
-            const payload = {
-                ...value,
-                price: Number(value.price),
-                stock: value.stock ? Number(value.stock) : 0,
+            setIsSubmitting(true)
+            try {
+                const payload = {
+                    ...value,
+                    price: Number(value.price),
+                    stock: Number(value.stock),
+                }
+
+                const res = await fetch("https://medi-stores-backend.vercel.app/api/medicines", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify(payload),
+                })
+
+                if (!res.ok) throw new Error()
+
+                toast.success("Medicine added successfully to inventory!")
+                form.reset()
+            } catch {
+                toast.error("Failed to add medicine. Please check your permissions.")
+            } finally {
+                setIsSubmitting(false)
             }
-
-            const res = await fetch("https://medi-stores-backend.vercel.app/api/medicines", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify(payload),
-            })
-
-            if (!res.ok) {
-                toast.error("Failed to add medicine")
-                return
-            }
-
-            toast.success("Medicine added successfully")
-            form.reset()
         },
     })
 
     return (
-        <div className="flex min-h-[calc(100vh-80px)] items-center justify-center px-4">
-            <Card className="w-full max-w-2xl">
-                <CardHeader>
-                    <CardTitle>Add New Medicine</CardTitle>
+        <div className="flex min-h-screen items-center justify-center bg-slate-50/50 py-12 px-4">
+            <Card className="w-full max-w-3xl border-none shadow-2xl shadow-red-100 rounded-[32px] overflow-hidden">
+                <CardHeader className="bg-red-600 text-white p-8">
+                    <div className="flex items-center gap-3">
+                        <div className="bg-white/20 p-2 rounded-lg">
+                            <PlusCircle className="size-6 text-white" />
+                        </div>
+                        <div>
+                            <CardTitle className="text-2xl font-black uppercase tracking-tight">
+                                Add Medicine
+                            </CardTitle>
+                            <p className="text-red-100 text-xs font-bold uppercase tracking-widest mt-1">
+                                Inventory Management
+                            </p>
+                        </div>
+                    </div>
                 </CardHeader>
 
-                <CardContent>
+                <CardContent className="p-8">
                     <form
                         id="medicine-form"
                         onSubmit={(e) => {
                             e.preventDefault()
                             form.handleSubmit()
                         }}
-                        className="space-y-5"
+                        className="space-y-8"
                     >
-                        <FieldGroup className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <form.Field name="name">
-                                {(field) => {
-                                    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
-                                    return (
-                                        <Field data-invalid={isInvalid}>
-                                            <FieldLabel>Medicine Name *</FieldLabel>
+                        <div className="space-y-5">
+                            <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
+                                <Pill className="size-4 text-red-500" />
+                                <h3 className="text-sm font-black uppercase text-slate-800">
+                                    General Information
+                                </h3>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <form.Field
+                                    name="name"
+                                    validators={{
+                                        onChange: ({ value }) =>
+                                            value.length < 3 && "Medicine name must be at least 3 characters",
+                                    }}
+                                >
+                                    {(field) => (
+                                        <Field>
+                                            <FieldLabel>Medicine Name</FieldLabel>
                                             <Input
                                                 value={field.state.value}
                                                 onChange={(e) => field.handleChange(e.target.value)}
-                                                onBlur={field.handleBlur}
-                                                placeholder="Paracetamol 500mg"
                                             />
-                                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                                            <FieldError />
                                         </Field>
-                                    )
-                                }}
-                            </form.Field>
+                                    )}
+                                </form.Field>
 
-                   
-
-                            <form.Field name="price">
-                                {(field) => {
-                                    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
-                                    return (
-                                        <Field data-invalid={isInvalid}>
-                                            <FieldLabel>Price (BDT) *</FieldLabel>
-                                            <Input
-                                                type="number"
-                                                step="0.01"
+                                <form.Field
+                                    name="categoryId"
+                                    validators={{
+                                        onChange: ({ value }) =>
+                                            !value && "Please select a category",
+                                    }}
+                                >
+                                    {(field) => (
+                                        <Field>
+                                            <FieldLabel>Category</FieldLabel>
+                                            <Select
                                                 value={field.state.value}
-                                                onChange={(e) => field.handleChange(e.target.value)}
-                                                onBlur={field.handleBlur}
-                                                placeholder="120.50"
-                                            />
-                                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                                                onValueChange={field.handleChange}
+                                                disabled={loadingCategories}
+                                            >
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select Category" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {categories.map((cat) => (
+                                                        <SelectItem key={cat.id} value={cat.id}>
+                                                            {cat.name}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            <FieldError />
                                         </Field>
-                                    )
-                                }}
-                            </form.Field>
+                                    )}
+                                </form.Field>
+                            </div>
+                        </div>
 
-                            <form.Field name="stock">
-                                {(field) => {
-                                    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
-                                    return (
-                                        <Field data-invalid={isInvalid}>
-                                            <FieldLabel>Stock Quantity</FieldLabel>
-                                            <Input
-                                                type="number"
-                                                value={field.state.value}
-                                                onChange={(e) => field.handleChange(e.target.value)}
-                                                onBlur={field.handleBlur}
-                                                placeholder="100"
-                                            />
-                                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                                        </Field>
-                                    )
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <form.Field
+                                name="price"
+                                validators={{
+                                    onChange: ({ value }) =>
+                                        !value || Number(value) <= 0 ? "Invalid price" : undefined,
                                 }}
-                            </form.Field>
-
-                            <form.Field name="manufacturer">
-                                {(field) => {
-                                    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
-                                    return (
-                                        <Field data-invalid={isInvalid}>
-                                            <FieldLabel>Manufacturer *</FieldLabel>
-                                            <Input
-                                                value={field.state.value}
-                                                onChange={(e) => field.handleChange(e.target.value)}
-                                                onBlur={field.handleBlur}
-                                                placeholder="Square Pharmaceuticals"
-                                            />
-                                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                                        </Field>
-                                    )
-                                }}
-                            </form.Field>
-
-                            <form.Field name="dosage">
-                                {(field) => {
-                                    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
-                                    return (
-                                        <Field data-invalid={isInvalid}>
-                                            <FieldLabel>Dosage (optional)</FieldLabel>
-                                            <Input
-                                                value={field.state.value}
-                                                onChange={(e) => field.handleChange(e.target.value)}
-                                                onBlur={field.handleBlur}
-                                                placeholder="500mg tablet"
-                                            />
-                                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                                        </Field>
-                                    )
-                                }}
-                            </form.Field>
-
-                            <form.Field name="imageUrl">
-                                {(field) => {
-                                    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
-                                    return (
-                                        <Field data-invalid={isInvalid}>
-                                            <FieldLabel>Image URL *</FieldLabel>
-                                            <Input
-                                                value={field.state.value}
-                                                onChange={(e) => field.handleChange(e.target.value)}
-                                                onBlur={field.handleBlur}
-                                                placeholder="https://example.com/paracetamol.jpg"
-                                            />
-                                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                                        </Field>
-                                    )
-                                }}
-                            </form.Field>
-
-                            <form.Field name="categoryId">
-                                {(field) => {
-                                    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
-                                    return (
-                                        <Field data-invalid={isInvalid}>
-                                            <FieldLabel>Category *</FieldLabel>
-                                            {loadingCategories ? (
-                                                <Select disabled>
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Loading categories..." />
-                                                    </SelectTrigger>
-                                                </Select>
-                                            ) : categoriesError ? (
-                                                <div className="text-sm text-red-600">{categoriesError}</div>
-                                            ) : (
-                                                <Select
-                                                    value={field.state.value}
-                                                    onValueChange={field.handleChange}
-                                                    disabled={categories.length === 0}
-                                                >
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Select category" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {categories.map((cat) => (
-                                                            <SelectItem key={cat.id} value={cat.id}>
-                                                                {cat.name}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            )}
-                                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                                        </Field>
-                                    )
-                                }}
-                            </form.Field>
-                        </FieldGroup>
-
-                        <form.Field name="description">
-                            {(field) => {
-                                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
-                                return (
-                                    <Field data-invalid={isInvalid}>
-                                        <FieldLabel>Description (optional)</FieldLabel>
-                                        <Textarea
+                            >
+                                {(field) => (
+                                    <Field>
+                                        <FieldLabel>Price</FieldLabel>
+                                        <Input
+                                            type="number"
                                             value={field.state.value}
                                             onChange={(e) => field.handleChange(e.target.value)}
-                                            onBlur={field.handleBlur}
-                                            placeholder="Detailed description of the medicine..."
-                                            rows={4}
                                         />
-                                        {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                                        <FieldError />
                                     </Field>
-                                )
+                                )}
+                            </form.Field>
+
+                            <form.Field
+                                name="stock"
+                                validators={{
+                                    onChange: ({ value }) =>
+                                        Number(value) < 0 && "Stock cannot be negative",
+                                }}
+                            >
+                                {(field) => (
+                                    <Field>
+                                        <FieldLabel>Stock</FieldLabel>
+                                        <Input
+                                            type="number"
+                                            value={field.state.value}
+                                            onChange={(e) => field.handleChange(e.target.value)}
+                                        />
+                                        <FieldError />
+                                    </Field>
+                                )}
+                            </form.Field>
+
+                            <form.Field
+                                name="dosage"
+                                validators={{
+                                    onChange: ({ value }) =>
+                                        !value && "Dosage required",
+                                }}
+                            >
+                                {(field) => (
+                                    <Field>
+                                        <FieldLabel>Dosage</FieldLabel>
+                                        <Input
+                                            value={field.state.value}
+                                            onChange={(e) => field.handleChange(e.target.value)}
+                                        />
+                                        <FieldError />
+                                    </Field>
+                                )}
+                            </form.Field>
+                        </div>
+
+                        <form.Field
+                            name="manufacturer"
+                            validators={{
+                                onChange: ({ value }) =>
+                                    value.length < 2 && "Manufacturer required",
                             }}
+                        >
+                            {(field) => (
+                                <Field>
+                                    <FieldLabel>Manufacturer</FieldLabel>
+                                    <Input
+                                        value={field.state.value}
+                                        onChange={(e) => field.handleChange(e.target.value)}
+                                    />
+                                    <FieldError />
+                                </Field>
+                            )}
+                        </form.Field>
+
+                        <form.Field
+                            name="imageUrl"
+                            validators={{
+                                onChange: ({ value }) =>
+                                    !value.startsWith("http") && "Invalid URL",
+                            }}
+                        >
+                            {(field) => (
+                                <Field>
+                                    <FieldLabel>Image URL</FieldLabel>
+                                    <Input
+                                        value={field.state.value}
+                                        onChange={(e) => field.handleChange(e.target.value)}
+                                    />
+                                    <FieldError />
+                                </Field>
+                            )}
+                        </form.Field>
+
+                        <form.Field name="description">
+                            {(field) => (
+                                <Field>
+                                    <FieldLabel>Description</FieldLabel>
+                                    <Textarea
+                                        value={field.state.value}
+                                        onChange={(e) => field.handleChange(e.target.value)}
+                                    />
+                                </Field>
+                            )}
                         </form.Field>
                     </form>
                 </CardContent>
 
-                <CardFooter className="flex gap-3 justify-end">
-                    <Button variant="outline" onClick={() => form.reset()}>
-                        Reset
+                <CardFooter className="p-8 flex justify-end gap-4">
+                    <Button type="button" variant="ghost" onClick={() => form.reset()}>
+                        Clear Form
                     </Button>
                     <Button
                         type="submit"
                         form="medicine-form"
-                        className="bg-red-600 hover:bg-red-700 text-white"
+                        disabled={isSubmitting}
                     >
-                        Add Medicine
+                        {isSubmitting ? <Loader2 className="animate-spin" /> : "Confirm & Save"}
                     </Button>
                 </CardFooter>
             </Card>
