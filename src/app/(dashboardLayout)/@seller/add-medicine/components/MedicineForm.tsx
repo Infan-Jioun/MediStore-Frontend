@@ -50,7 +50,6 @@ type FormValues = z.infer<typeof formSchema>
 type Category = {
     id: string
     name: string
-    // image?: string   ← you can add if you want to show category images later
 }
 
 export default function AddMedicine() {
