@@ -17,7 +17,9 @@ type MedicineItem = {
     manufacturer: string
     dosage?: string | null
     imageUrl?: string | null
-    category: string
+    category: {
+        name: string
+    }
 }
 
 export default function Medicine() {
@@ -26,7 +28,7 @@ export default function Medicine() {
     const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/medicines")
+        fetch("https://medi-stores-backend.vercel.app/api/medicines")
             .then((res) => {
                 if (!res.ok) throw new Error("Failed to fetch")
                 return res.json()
@@ -96,7 +98,7 @@ export default function Medicine() {
                             <Button size="sm" className="bg-red-500 hover:bg-red-500 text-white hover:text-white" variant="outline" asChild>
                                 <Link href={`/medicines/${medicine.id}`}>
 
-                                  View  Deatils
+                                    View  Deatils
                                 </Link>
                             </Button>
 
@@ -105,8 +107,8 @@ export default function Medicine() {
                 ))}
             </div>
 
-            <div className="mt-8 text-center">
-                <Button asChild>
+            <div className="mt-8 text-center ">
+                <Button asChild className="bg-red-500 hover:bg-red-500">
                     <Link href="/shop">View More Shop</Link>
                 </Button>
             </div>

@@ -63,7 +63,7 @@ export default function AddMedicine() {
         const fetchCategories = async () => {
             try {
                 setLoadingCategories(true)
-                const res = await fetch("http://localhost:5000/api/categories", {
+                const res = await fetch("https://medi-stores-backend.vercel.app/api/categories", {
                     credentials: "include",
                 })
 
@@ -105,7 +105,7 @@ export default function AddMedicine() {
                 stock: value.stock ? Number(value.stock) : 0,
             }
 
-            const res = await fetch("http://localhost:5000/api/medicines", {
+            const res = await fetch("https://medi-stores-backend.vercel.app/api/medicines", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",

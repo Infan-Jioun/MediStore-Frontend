@@ -17,19 +17,19 @@ export async function proxy(request: NextRequest, response: NextResponse) {
     if (!isAuthenticated) {
         return NextResponse.redirect(new URL("/login", request.url))
     }
-    if (isAdmin && pathname.startsWith("/dashboard")) {
+    if (isAdmin && pathname.startsWith("/customer-dashboard")) {
         return NextResponse.redirect(new URL("/admin-dashboard", request.url))
     }
     if (!isAdmin && pathname.startsWith("/admin-dashboard")) {
-        return NextResponse.redirect(new URL("/dashboard", request.url))
+        return NextResponse.redirect(new URL("/customer-dashboard", request.url))
     }
-    if (isSeller && pathname.startsWith("/dashboard")) {
+    if (isSeller && pathname.startsWith("/customer-dashboard")) {
         return NextResponse.redirect(new URL("/seller-dashboard", request.url))
     }
     if (!isSeller && pathname.startsWith("/seller-dashboard")) {
-        return NextResponse.redirect(new URL("/dashboard", request.url))
+        return NextResponse.redirect(new URL("/customer-dashboard", request.url))
     }
-    if (isSeller && pathname.startsWith("/dashboard")) {
+    if (isSeller && pathname.startsWith("/customer-dashboard")) {
         return NextResponse.redirect(new URL("/seller-dashboard", request.url))
     }
   

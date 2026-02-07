@@ -22,10 +22,7 @@ export const adminRoutes: Route[] = [
                 title: "Orders Management",
                 url: "orders-management",
             },
-            {
-                title: "Sellers Management",
-                url: "/sellers-menagement",
-            },
+           
         ],
     },
 ];

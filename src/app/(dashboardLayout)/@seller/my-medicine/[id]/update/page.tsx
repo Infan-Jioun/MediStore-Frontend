@@ -86,8 +86,8 @@ export default function EditMedicine() {
                 setCategoriesError(null)
 
                 const [medicineRes, categoriesRes] = await Promise.all([
-                    fetch(`http://localhost:5000/api/seller/medicines/${id}`, { credentials: "include" }),
-                    fetch("http://localhost:5000/api/categories", { credentials: "include" }),
+                    fetch(`https://medi-stores-backend.vercel.app/api/seller/medicines/${id}`, { credentials: "include" }),
+                    fetch("https://medi-stores-backend.vercel.app/api/categories", { credentials: "include" }),
                 ])
 
                 if (!medicineRes.ok) {
@@ -135,7 +135,7 @@ export default function EditMedicine() {
             }
 
             try {
-                const res = await fetch(`http://localhost:5000/api/seller/medicines/${id}`, {
+                const res = await fetch(`https://medi-stores-backend.vercel.app/api/seller/medicines/${id}`, {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",

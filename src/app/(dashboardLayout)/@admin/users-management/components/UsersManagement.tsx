@@ -33,7 +33,7 @@ export default function UsersManagement() {
     const fetchUsers = async () => {
         try {
             setLoading(true)
-            const res = await fetch("http://localhost:5000/api/admin/users", {
+            const res = await fetch("https://medi-stores-backend.vercel.app/api/admin/users", {
                 credentials: "include",
             })
             if (!res.ok) throw new Error("Failed to fetch users")
@@ -50,7 +50,7 @@ export default function UsersManagement() {
         const newStatus = user.isBanned === "ACTIVE" ? "BANNED" : "ACTIVE"
         setUpdatingId(user.id)
         try {
-            const res = await fetch(`http://localhost:5000/api/admin/users/${user.id}`, {
+            const res = await fetch(`https://medi-stores-backend.vercel.app/api/admin/users/${user.id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",

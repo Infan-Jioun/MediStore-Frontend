@@ -2,46 +2,16 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { Loader2, Package, Calendar, MapPin, ReceiptText } from "lucide-react"
-
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
+import { Loader2, Package, Calendar, MapPin, ReceiptText, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { authClient } from "@/lib/auth-client"
+import OrderStatusBadge from "./components/OrderStatusBadge"
+import ReviewSection from "./components/ReviewSection"
 
-type OrderItem = {
-    id: string
-    quantity: number
-    price: number
-    medicine: {
-        id: string
-        name: string
-        price: number
-    }
-}
-
-type Order = {
-    id: string
-    totalAmount: number
-    shippingAddress: string
-    createdAt: string
-    status: string
-    items: OrderItem[]
-}
+// Types remain the same as your code...
+type OrderItem = { id: string; quantity: number; price: number; medicine: { id: string; name: string; price: number }; reviewRating?: number; reviewComment?: string }
+type Order = { id: string; totalAmount: number; shippingAddress: string; createdAt: string; status: string; items: OrderItem[] }
 
 export default function OrdersPage() {
     const router = useRouter()
@@ -50,135 +20,105 @@ export default function OrdersPage() {
     const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
-        const init = async () => {
+        const fetchOrders = async () => {
             try {
                 setLoading(true)
                 const session = await authClient.getSession()
-                if (!session?.data) {
-                    router.replace("/login")
-                    return
-                }
+                if (!session?.data) return router.replace("/login")
 
-                const res = await fetch("http://localhost:5000/api/orders", {
-                    credentials: "include",
-                    cache: "no-store",
-                })
-
-                const text = await res.text()
-                if (!res.ok) throw new Error(text || "Failed to load orders")
-                const data = text ? JSON.parse(text) : []
+                const res = await fetch("https://medi-stores-backend.vercel.app/api/orders",
+                    { credentials: "include", cache: "no-store" })
+                if (!res.ok) throw new Error("Failed to load orders")
+                const data = await res.json()
                 setOrders(data)
             } catch (err: any) {
-                setError(err.message || "Something went wrong")
+                setError(err.message)
             } finally {
                 setLoading(false)
             }
         }
-
-        init()
+        fetchOrders()
     }, [router])
 
-    if (loading)
-        return (
-            <div className="container min-h-screen mx-auto py-24 flex flex-col items-center justify-center space-y-4">
-                <Loader2 className="w-12 h-12 animate-spin text-red-600" />
+    const handleReviewSubmit = async (medicineId: string, rating: number, comment: string) => {
+        if (!rating) return alert("Please provide a rating")
+        try {
+            const res = await fetch(`https://medi-stores-backend.vercel.app/api/reviews`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ medicineId, rating, comment }),
+                credentials: "include",
+            })
+            if (!res.ok) throw new Error("Submission failed")
+            alert("Review submitted successfully!")
+        } catch (err: any) {
+            alert(err.message)
+        }
+    }
 
-            </div>
-        )
-
-    if (error)
-        return (
-            <div className="container mx-auto py-24 text-center">
-                <div className="bg-red-50 border border-red-200 rounded-xl p-8 max-w-md mx-auto">
-                    <p className="text-red-600 text-lg font-semibold mb-4">{error}</p>
-                    <Button
-                        className="bg-red-600 hover:bg-red-700 text-white transition-colors"
-                        onClick={() => window.location.reload()}
-                    >
-                        Retry Connection
-                    </Button>
-                </div>
-            </div>
-        )
-
-    if (orders.length === 0)
-        return (
-            <div className="container mx-auto py-24 text-center">
-                <Package className="w-16 h-16 text-red-200 mx-auto mb-4" />
-                <p className="text-red-400 text-xl font-medium">No orders found yet.</p>
-                <Button
-                    variant="outline"
-                    className="mt-4 border-red-200 text-red-600 hover:bg-red-50"
-                    onClick={() => router.push("/")}
-                >
-                    Start Shopping
-                </Button>
-            </div>
-        )
+    if (loading) return (
+        <div className="flex h-screen items-center justify-center">
+            <Loader2 className="w-10 h-10 animate-spin text-red-600" />
+        </div>
+    )
 
     return (
-        <div className="min-h-screen bg-slate-50/50">
-            <div className="container mx-auto py-12 px-4 max-w-6xl">
-                <div className="flex justify-center items-center gap-3 mb-2 ">
-                    <ReceiptText className="w-8 h-8 text-red-600" />
-                    <h1 className="text-4xl text-red-600 font-extrabold">
-                        My Orders
-                    </h1>
-                </div>
-                <p className="text-slate-500 mb-8  text-center">Review and track your recent medical supplies.</p>
+        <div className="min-h-screen bg-white text-slate-900 pb-20">
 
-                <div className="bg-white rounded-xl shadow-sm border border-red-100 overflow-hidden">
+            <div className="bg-red-600 pt-16 pb-24 px-4 text-center">
+                <div className="flex justify-center items-center gap-3 mb-4">
+                    <ReceiptText className="w-10 h-10 text-white" />
+                    <h1 className="text-4xl font-black text-white tracking-tight uppercase">My Orders</h1>
+                </div>
+                <p className="text-red-100 max-w-md mx-auto">Track your health essentials and share your feedback with us.</p>
+            </div>
+
+
+            <div className="container mx-auto px-4 -mt-12">
+                <div className="bg-white rounded-2xl shadow-2xl border border-red-100 overflow-hidden">
                     <Table>
-                        <TableHeader className="bg-red-50/50">
-                            <TableRow className="hover:bg-transparent border-red-100">
-                                <TableHead className="text-red-900 font-bold py-5">Order ID</TableHead>
-                                <TableHead className="text-red-900 font-bold">
-                                    <div className="flex items-center gap-2"><Calendar className="w-4 h-4" /> Placed On</div>
-                                </TableHead>
-                                <TableHead className="text-red-900 font-bold text-right">Total</TableHead>
-                                <TableHead className="text-red-900 font-bold">
-                                    <div className="flex items-center gap-2 ml-4"><MapPin className="w-4 h-4" /> Destination</div>
-                                </TableHead>
-                                <TableHead className="text-red-900 font-bold">Items</TableHead>
-                                <TableHead className="text-red-900 font-bold text-center">Status</TableHead>
+                        <TableHeader className="bg-slate-50">
+                            <TableRow className="border-b border-red-100">
+                                <TableHead className="text-red-600 font-bold py-6 pl-6 uppercase text-xs">ID & Date</TableHead>
+                                <TableHead className="text-red-600 font-bold uppercase text-xs text-right">Total Amount</TableHead>
+                                <TableHead className="text-red-600 font-bold uppercase text-xs pl-10">Items & Reviews</TableHead>
+                                <TableHead className="text-red-600 font-bold uppercase text-xs text-center">Status</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {orders.map((order) => (
-                                <TableRow key={order.id} className="hover:bg-red-50/30 transition-colors border-red-50">
-                                    <TableCell className="font-mono text-red-600 font-medium">
-                                        #{order.id.slice(-6).toUpperCase()}
+                                <TableRow key={order.id} className="hover:bg-red-50/20 transition-all border-b border-red-50">
+                                    <TableCell className="py-6 pl-6">
+                                        <div className="font-mono font-bold text-red-600">#{order.id.slice(-6).toUpperCase()}</div>
+                                        <div className="flex items-center gap-1 text-slate-400 text-xs mt-1">
+                                            <Calendar className="w-3 h-3" />
+                                            {new Date(order.createdAt).toLocaleDateString()}
+                                        </div>
                                     </TableCell>
-                                    <TableCell className="text-slate-600">
-                                        {new Date(order.createdAt).toLocaleDateString(undefined, {
-                                            year: 'numeric',
-                                            month: 'short',
-                                            day: 'numeric'
-                                        })}
-                                    </TableCell>
-                                    <TableCell className="text-right font-bold text-slate-900">
+
+                                    <TableCell className="text-right font-black text-lg text-slate-800">
                                         ${order.totalAmount.toFixed(2)}
                                     </TableCell>
-                                    <TableCell className="max-w-[200px] truncate text-slate-600 pl-4">
-                                        {order.shippingAddress}
-                                    </TableCell>
-                                    <TableCell>
-                                        <div className="space-y-1">
+
+                                    <TableCell className="pl-10 py-6 min-w-[350px]">
+                                        <div className="space-y-4">
                                             {order.items.map((item) => (
-                                                <div key={item.id} className="flex flex-col text-sm border-l-2 border-red-100 pl-2">
-                                                    <span className="font-medium text-slate-800">{item.medicine.name}</span>
-                                                    <span className="text-red-500 text-xs">Qty: {item.quantity} • ${(item.price * item.quantity).toFixed(2)}</span>
+                                                <div key={item.id} className="group">
+                                                    <div className="flex justify-between items-start mb-1">
+                                                        <span className="font-bold text-slate-700">{item.medicine.name}</span>
+                                                        <span className="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded font-bold">×{item.quantity}</span>
+                                                    </div>
+                                                    <ReviewSection
+                                                        item={item}
+                                                        onReviewSubmit={(r, c) => handleReviewSubmit(item.medicine.id, r, c)}
+                                                    />
                                                 </div>
                                             ))}
                                         </div>
                                     </TableCell>
+
                                     <TableCell className="text-center">
-                                        <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${order.status.toLowerCase() === 'completed'
-                                            ? 'bg-red-100 text-red-700'
-                                            : 'bg-amber-100 text-amber-700'
-                                            }`}>
-                                            {order.status}
-                                        </span>
+                                        <OrderStatusBadge status={order.status} />
                                     </TableCell>
                                 </TableRow>
                             ))}
