@@ -1,5 +1,6 @@
-"use client"
 
+"use client"
+export const dynamic = "force-dynamic"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Loader2, Package, Calendar, MapPin, ReceiptText, Star } from "lucide-react"
@@ -9,7 +10,6 @@ import { authClient } from "@/lib/auth-client"
 import OrderStatusBadge from "./components/OrderStatusBadge"
 import ReviewSection from "./components/ReviewSection"
 
-// Types remain the same as your code...
 type OrderItem = { id: string; quantity: number; price: number; medicine: { id: string; name: string; price: number }; reviewRating?: number; reviewComment?: string }
 type Order = { id: string; totalAmount: number; shippingAddress: string; createdAt: string; status: string; items: OrderItem[] }
 

@@ -1,6 +1,14 @@
 import type { NextConfig } from "next";
 import './env'
 const nextConfig: NextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: "/api/auth/:path*",
+        destination: `https://medi-stores-backend.vercel.app/api/auth/:path*`,
+      },
+    ];
+  },
 
   images: {
     remotePatterns: [

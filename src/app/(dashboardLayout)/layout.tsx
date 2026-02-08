@@ -6,7 +6,7 @@ import {
     SidebarTrigger,
 } from "./components/ui/sidebar"
 import { Roles } from "@/constant/roles"
-
+export const dynamic = "force-dynamic"
 type DashboardLayoutProps = {
     admin: React.ReactNode
     seller: React.ReactNode

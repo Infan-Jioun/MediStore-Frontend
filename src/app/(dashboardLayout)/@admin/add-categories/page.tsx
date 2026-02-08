@@ -1,7 +1,7 @@
 import React from 'react'
 import { CategoryForm } from './components/CategoryForm'
 
-
+export const dynamic = "force-dynamic"
 
 export default function AddCategories() {
     return (

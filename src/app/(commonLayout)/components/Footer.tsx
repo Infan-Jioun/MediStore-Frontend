@@ -39,10 +39,7 @@ const Footer = ({
       links: [
         { text: "Shop", url: "#" },
         { text: "Pricing", url: "#" },
-        { text: "Marketplace", url: "#" },
-        { text: "Features", url: "#" },
-        { text: "Integrations", url: "#" },
-        { text: "Pricing", url: "#" },
+     
       ],
     },
     {
@@ -50,18 +47,17 @@ const Footer = ({
       links: [
         { text: "About", url: "#" },
         { text: "Team", url: "#" },
-        { text: "Blog", url: "#" },
-        { text: "Careers", url: "#" },
-        { text: "Contact", url: "#" },
-        { text: "Privacy", url: "#" },
+
       ],
     },
     {
       title: "Category",
       links: [
-        { text: "Help", url: "#" },
-        { text: "Sales", url: "#" },
-        { text: "Advertise", url: "#" },
+        { text: "Digestive Health", url: "#" },
+        { text: "Vitamins & Supplements", url: "#" },
+        { text: "Cold & Flu", url: "#" },
+        { text: "Pain Relief", url: "#" },
+        { text: "Pain Relief", url: "#" },
       ],
     },
     {

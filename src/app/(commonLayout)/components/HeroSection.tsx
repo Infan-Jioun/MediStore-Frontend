@@ -92,16 +92,16 @@ const HeroSection = ({
              
                 </div>
 
-                {/* Features Section with Red Theme */}
+                
                 <div className="mx-auto mt-12 sm:mt-14 md:mt-16 lg:mt-20 max-w-full lg:max-w-5xl px-4 sm:px-6 lg:px-0">
                     <div className="relative rounded-xl sm:rounded-2xl lg:rounded-3xl border border-red-100 bg-gradient-to-br from-white to-red-50 p-4 sm:p-6 lg:p-8 shadow-lg sm:shadow-xl lg:shadow-2xl shadow-red-50/30 sm:shadow-red-50/50 backdrop-blur-sm">
-                        {/* Background Pattern */}
+                    
                         <div className="absolute inset-0 opacity-5 [background-image:radial-gradient(circle_at_center,#dc2626_1px,transparent_1px)] [background-size:16px_16px] sm:[background-size:20px_20px]"></div>
 
                         <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                             {features.map((feature, index) => (
                                 <div key={feature.title} className="relative group">
-                                    {/* Vertical Separators - Hidden on mobile, shown on specific breakpoints */}
+                                
                                     {index < features.length - 1 && (
                                         <>
                                             <Separator
@@ -115,7 +115,7 @@ const HeroSection = ({
                                         </>
                                     )}
 
-                                    {/* Mobile: Horizontal separator for 2nd item in 2-column layout */}
+                    
                                     {index === 1 && (
                                         <Separator
                                             orientation="horizontal"
@@ -123,7 +123,7 @@ const HeroSection = ({
                                         />
                                     )}
 
-                                    <div className="flex flex-col items-start text-left p-4 sm:p-6 rounded-xl sm:rounded-2xl transition-all duration-300 hover:bg-white/80 hover:shadow-md sm:hover:shadow-lg hover:shadow-red-100/30 sm:hover:shadow-red-100/50">
+                                    <div className="flex flex-col items-start text-left p-4 sm:p-6 rounded-xl sm:rounded-2xl  duration-300 hover:bg-white/80 hover:shadow-md ">
                                         <div className="mb-4 sm:mb-5 flex size-10 sm:size-12 lg:size-14 items-center justify-center rounded-xl sm:rounded-2xl bg-gradient-to-br from-red-50 to-rose-50 border border-red-100 shadow-inner group-hover:shadow-md">
                                             <div className="relative">
                                                 {feature.icon}
@@ -137,25 +137,18 @@ const HeroSection = ({
                                             {feature.description}
                                         </p>
 
-                                        {/* Red accent line */}
                                         <div className="mt-3 sm:mt-4 w-10 sm:w-12 h-1 bg-gradient-to-r from-red-500 to-rose-500 rounded-full group-hover:w-12 sm:group-hover:w-16 transition-all duration-300"></div>
                                     </div>
                                 </div>
                             ))}
                         </div>
 
-                        {/* Bottom Red Accent */}
                         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 sm:w-32 h-1 bg-gradient-to-r from-transparent via-red-400 to-transparent rounded-full"></div>
                     </div>
                 </div>
 
-                {/* Call to Action */}
-                <div className="mt-8 sm:mt-10 md:mt-12 text-center">
-                    <button className="inline-flex items-center justify-center px-6 py-2.5 sm:px-8 sm:py-3 text-sm sm:text-base font-medium text-white bg-gradient-to-r from-red-600 to-rose-600 rounded-full shadow-lg shadow-red-500/25 hover:shadow-xl hover:shadow-red-500/35 transition-all duration-300 hover:scale-105 active:scale-95">
-                        Explore Our Services
-                        <HeartPulse className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
-                    </button>
-                </div>
+        
+               
             </div>
         </section>
     );

@@ -1,5 +1,5 @@
 "use client"
-
+export const dynamic = "force-dynamic"  
 import { useEffect, useState } from "react"
 import {
     Loader2,
@@ -102,7 +102,7 @@ export default function OrdersManagement() {
                     </div>
                     <p className="text-slate-500 mt-3">Manage and monitor all incoming pharmacy orders.</p>
                 </div>
-             
+
             </div>
 
 
