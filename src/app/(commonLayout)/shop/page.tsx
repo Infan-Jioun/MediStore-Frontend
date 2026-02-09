@@ -33,13 +33,13 @@ export default function MedicinesPage() {
   useEffect(() => {
     setLoading(true);
     Promise.all([
-      fetch("https://medi-stores-backend.vercel.app/api/medicines", {
+      fetch("/api/medicines", {
         credentials: "include",
       }).then((res) => {
         if (!res.ok) throw new Error("Failed to fetch medicines");
         return res.json();
       }),
-      fetch("https://medi-stores-backend.vercel.app/api/categories", {
+      fetch("/api/categories", {
         credentials: "include",
       }).then((res) => {
         if (!res.ok) throw new Error("Failed to fetch categories");

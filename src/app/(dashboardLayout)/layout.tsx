@@ -1,4 +1,4 @@
-import { userService } from "@/Services/user.service"
+import { userService } from "@/services/user.service"
 import { AppSidebar } from "./components/app-sidebar"
 import {
     SidebarInset,

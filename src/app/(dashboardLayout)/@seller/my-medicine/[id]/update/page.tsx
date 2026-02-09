@@ -79,8 +79,8 @@ export default function EditMedicine() {
         setCategoriesError(null)
 
         const [medicineRes, categoriesRes] = await Promise.all([
-          fetch(`https://medi-stores-backend.vercel.app/api/seller/medicines/${id}`, { credentials: "include" }),
-          fetch("https://medi-stores-backend.vercel.app/api/categories", { credentials: "include" }),
+          fetch(`/api/seller/medicines/${id}`, { credentials: "include" }),
+          fetch("/api/categories", { credentials: "include" }),
         ])
 
         if (!medicineRes.ok) throw new Error("Failed to load medicine")
@@ -137,7 +137,7 @@ export default function EditMedicine() {
         stock: Number(formData.stock),
       }
 
-      const res = await fetch(`https://medi-stores-backend.vercel.app/api/seller/medicines/${id}`, {
+      const res = await fetch(`/api/seller/medicines/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

@@ -51,7 +51,7 @@ export default function SellerOrdersPage() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await fetch("https://medi-stores-backend.vercel.app/api/seller/orders", {
+        const res = await fetch("/api/seller/orders", {
           credentials: "include",
         })
         if (!res.ok) throw new Error()
@@ -69,7 +69,7 @@ export default function SellerOrdersPage() {
   const updateStatus = async (orderId: string, status: string) => {
     try {
       setUpdatingId(orderId)
-      const res = await fetch(`https://medi-stores-backend.vercel.app/api/seller/orders/${orderId}`, {
+      const res = await fetch(`/api/seller/orders/${orderId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -77,7 +77,7 @@ export default function SellerOrdersPage() {
       })
       if (!res.ok) throw new Error()
       setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o))
-    } catch (err) {
+  } catch (err) {
       alert("Status update failed")
     } finally {
       setUpdatingId(null)

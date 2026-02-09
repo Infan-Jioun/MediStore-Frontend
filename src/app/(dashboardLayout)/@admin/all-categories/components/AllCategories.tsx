@@ -23,7 +23,7 @@ export default function AllCategories() {
   const fetchCategories = async () => {
     try {
       setLoading(true)
-      const res = await fetch("https://medi-stores-backend.vercel.app/api/admin/categories", {
+      const res = await fetch("/api/admin/categories", {
         credentials: "include",
       })
       if (!res.ok) {
@@ -49,7 +49,7 @@ export default function AllCategories() {
     }
 
     const res = await fetch(
-      `https://medi-stores-backend.vercel.app/api/admin/categories/${id}`,
+      `/api/admin/categories/${id}`,
       {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -76,7 +76,7 @@ export default function AllCategories() {
     if (!confirmed) return
 
     const res = await fetch(
-      `https://medi-stores-backend.vercel.app/api/admin/categories/${id}`,
+      `/api/admin/categories/${id}`,
       {
         method: "DELETE",
         credentials: "include",

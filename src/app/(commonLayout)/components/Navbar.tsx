@@ -156,7 +156,6 @@ const Navbar = ({ className }: { className?: string }) => {
                         />
                       )}
 
-                      <MobileLink title="About Us" url="/about" />
                     </div>
 
             

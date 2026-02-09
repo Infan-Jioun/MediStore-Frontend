@@ -57,7 +57,7 @@ export default function MedicineDetails() {
                 setLoading(true)
                 setError(null)
 
-                const res = await fetch(`https://medi-stores-backend.vercel.app/api/medicines/${id}`)
+                const res = await fetch(`/api/medicines/${id}`)
 
                 if (!res.ok) {
                     throw new Error("Failed to load medicine details")
@@ -74,7 +74,7 @@ export default function MedicineDetails() {
 
         const fetchSession = async () => {
             try {
-                const res = await fetch(`https://medi-stores-backend.vercel.app/get-session`, {
+                const res = await fetch(`/get-session`, {
                     credentials: "include",
                     cache: "no-store"
                 })
@@ -123,7 +123,7 @@ export default function MedicineDetails() {
                 shippingAddress,
             }
 
-            const res = await fetch(`https://medi-stores-backend.vercel.app/api/orders`, {
+            const res = await fetch(`/api/orders`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

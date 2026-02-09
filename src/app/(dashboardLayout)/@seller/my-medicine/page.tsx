@@ -43,7 +43,7 @@ export default function MyMedicine() {
             setLoading(true)
             setError(null)
 
-            const res = await fetch("https://medi-stores-backend.vercel.app/api/seller/medicines", {
+            const res = await fetch("/api/seller/medicines", {
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
             })
@@ -76,7 +76,7 @@ export default function MyMedicine() {
         if (!result.isConfirmed) return
 
         try {
-            const res = await fetch(`https://medi-stores-backend.vercel.app/api/seller/medicines/${id}`, {
+            const res = await fetch(`/api/seller/medicines/${id}`, {
                 method: "DELETE",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },

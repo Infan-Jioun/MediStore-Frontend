@@ -41,7 +41,7 @@ export default function AddMedicine() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await fetch("https://medi-stores-backend.vercel.app/api/categories", {
+                const res = await fetch("/api/categories", {
                     credentials: "include",
                 })
                 if (!res.ok) throw new Error()
@@ -76,7 +76,7 @@ export default function AddMedicine() {
                     stock: Number(value.stock),
                 }
 
-                const res = await fetch("https://medi-stores-backend.vercel.app/api/medicines", {
+                const res = await fetch("/api/medicines", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",

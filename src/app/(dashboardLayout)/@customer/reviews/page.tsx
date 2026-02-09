@@ -1,7 +1,9 @@
 "use client"
 export const dynamic = "force-dynamic"
+
 import { useEffect, useState } from "react"
 import { Loader2, Trash2, Save } from "lucide-react"
+import Swal from "sweetalert2"
 
 import {
     Table,
@@ -14,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/auth-client"
+import { toast } from "sonner"
 
 type Review = {
     id: string
@@ -30,26 +33,24 @@ export default function ReviewsPage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
 
-
     useEffect(() => {
         const loadReviews = async () => {
             try {
                 setLoading(true)
-
                 const session = await authClient.getSession()
                 if (!session?.data) {
                     window.location.href = "/login"
                     return
                 }
 
-                const res = await fetch("https://medi-stores-backend.vercel.app/api/reviews", {
+                const res = await fetch("/api/reviews", {
                     credentials: "include",
                     cache: "no-store",
                 })
 
                 if (!res.ok) {
-                    const text = await res.text()
-                    throw new Error(text || "Failed to load reviews")
+                    toast.error("Failed to load reviews")
+                    return
                 }
 
                 const data = await res.json()
@@ -66,44 +67,54 @@ export default function ReviewsPage() {
 
     const handleUpdate = async (review: Review) => {
         try {
-            const res = await fetch(
-                `https://medi-stores-backend.vercel.app/api/reviews/${review.id}`,
-                {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    credentials: "include",
-                    body: JSON.stringify({
-                        rating: review.rating,
-                        comment: review.comment,
-                    }),
-                }
-            )
+            const res = await fetch(`/api/reviews/${review.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({
+                    rating: review.rating,
+                    comment: review.comment,
+                }),
+            })
 
-            if (!res.ok) throw new Error("Update failed")
-            alert("Review updated")
+            if (!res.ok) {
+                toast.error("Update failed")
+                return
+            }
+
+            toast.success("Update success")
         } catch (err: any) {
-            alert(err.message || "Something went wrong")
+            toast.error(err.message || "Something went wrong")
         }
     }
 
-    // delete review
-    const handleDelete = async (id: string) => {
-        if (!confirm("Delete this review?")) return
+    const handleDelete = async (review: Review) => {
+        const confirmed = await Swal.fire({
+            title: "Are you sure?",
+            text: "Do you want to delete this review?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#dc2626",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: "Yes, delete it!",
+        })
+
+        if (!confirmed.isConfirmed) return
 
         try {
-            const res = await fetch(
-                `https://medi-stores-backend.vercel.app/api/reviews/${id}`,
-                {
-                    method: "DELETE",
-                    credentials: "include",
-                }
-            )
+            const res = await fetch(`/api/reviews/${review.id}`, {
+                method: "DELETE",
+                credentials: "include",
+            })
 
-            if (!res.ok) throw new Error("Delete failed")
-
-            setReviews((prev) => prev.filter((r) => r.id !== id))
+            if (!res.ok) {
+                toast.error("Delete failed")
+            } else {
+                toast.success("Successfully Deleted")
+                setReviews((prev) => prev.filter((r) => r.id !== review.id))
+            }
         } catch (err: any) {
-            alert(err.message || "Something went wrong")
+            toast.error("Something went wrong")
         }
     }
 
@@ -116,16 +127,12 @@ export default function ReviewsPage() {
 
     if (error)
         return (
-            <div className="text-center py-24 text-red-600 font-semibold">
-                {error}
-            </div>
+            <div className="text-center py-24 text-red-600 font-semibold">{error}</div>
         )
 
     if (reviews.length === 0)
         return (
-            <div className="text-center py-24 text-red-400">
-                No reviews found
-            </div>
+            <div className="text-center py-24 text-red-400">No reviews found</div>
         )
 
     return (
@@ -138,15 +145,9 @@ export default function ReviewsPage() {
                 <Table>
                     <TableHeader className="bg-red-50">
                         <TableRow>
-                            <TableHead className="text-red-900 font-bold">
-                                Medicine
-                            </TableHead>
-                            <TableHead className="text-red-900 font-bold">
-                                Rating
-                            </TableHead>
-                            <TableHead className="text-red-900 font-bold">
-                                Comment
-                            </TableHead>
+                            <TableHead className="text-red-900 font-bold">Medicine</TableHead>
+                            <TableHead className="text-red-900 font-bold">Rating</TableHead>
+                            <TableHead className="text-red-900 font-bold">Comment</TableHead>
                             <TableHead className="text-red-900 font-bold text-center">
                                 Actions
                             </TableHead>
@@ -155,10 +156,7 @@ export default function ReviewsPage() {
 
                     <TableBody>
                         {reviews.map((review) => (
-                            <TableRow
-                                key={review.id}
-                                className="hover:bg-red-50/40"
-                            >
+                            <TableRow key={review.id} className="hover:bg-red-50/40">
                                 <TableCell className="font-semibold text-red-700">
                                     {review.medicine.name}
                                 </TableCell>
@@ -174,10 +172,7 @@ export default function ReviewsPage() {
                                             setReviews((prev) =>
                                                 prev.map((r) =>
                                                     r.id === review.id
-                                                        ? {
-                                                            ...r,
-                                                            rating: Number(e.target.value),
-                                                        }
+                                                        ? { ...r, rating: Number(e.target.value) }
                                                         : r
                                                 )
                                             )
@@ -215,7 +210,7 @@ export default function ReviewsPage() {
                                         size="sm"
                                         variant="outline"
                                         className="border-red-600 text-red-600 hover:bg-red-50"
-                                        onClick={() => handleDelete(review.id)}
+                                        onClick={() => handleDelete(review)}
                                     >
                                         <Trash2 className="w-4 h-4" />
                                     </Button>

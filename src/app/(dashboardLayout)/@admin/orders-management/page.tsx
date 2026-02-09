@@ -53,7 +53,7 @@ export default function OrdersManagement() {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const res = await fetch("https://medi-stores-backend.vercel.app/api/admin/orders", {
+                const res = await fetch("/api/admin/orders", {
                     method: "GET",
                     credentials: "include",
                     headers: { "Content-Type": "application/json" },

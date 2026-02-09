@@ -40,7 +40,7 @@ export function CategoryForm() {
         },
         onSubmit: async ({ value }) => {
             const res = await fetch(
-                "https://medi-stores-backend.vercel.app/api/admin/categories",
+                "/api/admin/categories",
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },

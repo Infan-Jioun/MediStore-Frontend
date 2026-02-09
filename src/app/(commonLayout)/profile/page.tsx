@@ -27,7 +27,7 @@ export default function ProfilePage() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const res = await fetch("https://medi-stores-backend.vercel.app/api/auth/me", {
+                const res = await fetch("/api/auth/me", {
                     credentials: "include",
                 });
 

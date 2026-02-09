@@ -22,7 +22,11 @@ export default function Category() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await fetch("https://medi-stores-backend.vercel.app/api/categories")
+                const res = await fetch("/api/categories", {
+                    method: "GET",
+                    credentials: "include",
+
+                })
                 if (!res.ok) throw new Error("Failed to fetch categories")
                 const data = await res.json()
                 setCategories(data)

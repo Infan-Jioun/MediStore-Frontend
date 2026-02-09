@@ -26,7 +26,7 @@ export default function OrdersPage() {
                 const session = await authClient.getSession()
                 if (!session?.data) return router.replace("/login")
 
-                const res = await fetch("https://medi-stores-backend.vercel.app/api/orders",
+                const res = await fetch("/api/orders",
                     { credentials: "include", cache: "no-store" })
                 if (!res.ok) throw new Error("Failed to load orders")
                 const data = await res.json()
@@ -43,7 +43,7 @@ export default function OrdersPage() {
     const handleReviewSubmit = async (medicineId: string, rating: number, comment: string) => {
         if (!rating) return alert("Please provide a rating")
         try {
-            const res = await fetch(`https://medi-stores-backend.vercel.app/api/reviews`, {
+            const res = await fetch(`/api/reviews`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ medicineId, rating, comment }),

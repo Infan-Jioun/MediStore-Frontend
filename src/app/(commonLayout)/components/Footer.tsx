@@ -57,7 +57,7 @@ const Footer = ({
         { text: "Vitamins & Supplements", url: "#" },
         { text: "Cold & Flu", url: "#" },
         { text: "Pain Relief", url: "#" },
-        { text: "Pain Relief", url: "#" },
+        
       ],
     },
     {

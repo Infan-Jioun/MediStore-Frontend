@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
         source: "/api/auth/:path*",
         destination: `https://medi-stores-backend.vercel.app/api/auth/:path*`,
       },
+      {
+        source: "/api/:path*",
+        destination: "https://medi-stores-backend.vercel.app/api/:path*",
+      },
     ];
   },
 

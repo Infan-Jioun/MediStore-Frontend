@@ -28,7 +28,7 @@ export default function Medicine() {
     const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
-        fetch("https://medi-stores-backend.vercel.app/api/medicines")
+        fetch("/api/medicines")
             .then((res) => {
                 if (!res.ok) throw new Error("Failed to fetch")
                 return res.json()
