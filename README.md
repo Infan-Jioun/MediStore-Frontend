@@ -4,7 +4,7 @@
 
 ### Full-Stack Online Medical Store — Bangladesh
 
-**A modern e-commerce platform for medical supplies and medicines with category browsing, cart management, and fast doorstep delivery across Bangladesh.**
+**A modern e-commerce platform for medical supplies and medicines with category browsing, cart management, searching's and fast doorstep delivery across Bangladesh.**
 
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
