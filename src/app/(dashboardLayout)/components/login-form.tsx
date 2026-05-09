@@ -130,7 +130,7 @@ export function LoginForm({
                       <Input
                         id={field.name}
                         type="password"
-                        value={field.state.value} placeholder="Privide Your Password"
+                        value={field.state.value} placeholder="Provide Your Password"
                         onChange={(e) => field.handleChange(e.target.value)}
                       />
                       {isInvalid && <FieldError className="text-red-500" errors={field.state.meta.errors} />}
